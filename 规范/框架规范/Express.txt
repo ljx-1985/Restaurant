@@ -1,0 +1,99 @@
+Express 框架通用编程规范
+
+本规范假定您已遵循基本的 Node.js 编程规范（如代码格式、命名规范等），并在此基础上提供 Express 特有的指南。
+
+1. 应用结构与模块化
+
+按功能或层级组织： 将代码按照功能模块或经典的 MVC/分层架构进行组织。常见的目录结构可能包括：
+src/ (或 app/)
+controllers/: 处理请求和响应逻辑，调用 services。
+services/: 包含业务逻辑，处理数据操作等。
+routes/: 定义路由，将 URL 映射到 controllers 或 middleware。
+middleware/: 存放自定义的 Express 中间件。
+models/: 定义数据模型（如果使用 ORM/ODM）。
+config/: 存放配置文件。
+utils/: 通用工具函数。
+app.js (或 server.js): 应用入口文件，配置 Express 实例，加载路由和中间件。
+模块职责单一： 每个文件或模块应只负责单一的职责，避免一个文件承担过多的功能。
+使用模块导出/导入： 遵循 Node.js 的模块化规范 (require/module.exports 或 import/export) 来组织代码。
+2. 路由定义与管理
+
+路由文件分离： 将不同功能模块的路由定义分离到单独的文件中（例如 routes/users.js, routes/products.js）。
+使用 express.Router： 在路由文件中使用 express.Router() 创建路由实例，然后在主应用文件中使用 app.use('/prefix', router) 加载路由模块。这有助于管理路由前缀和中间件。
+示例 (routes/users.js): ```javascript const express = require('express'); const router = express.Router(); const userController = require('../controllers/userController');
+     router.get('/', userController.getAllUsers);
+router.post('/', userController.createUser);
+
+    module.exports = router;
+    ```
+  * 示例 (`app.js`):
+    ```javascript
+    const express = require('express');
+    const app = express();
+    const userRoutes = require('./routes/users');
+
+    app.use('/api/users', userRoutes);
+    ```
+RESTful 风格： 遵循 RESTful 风格设计 API 路由，使用正确的 HTTP 方法（GET, POST, PUT, DELETE 等）表示资源操作。
+路径清晰： 路由路径应清晰地表示资源层级和操作。
+3. 中间件 (Middleware)
+
+理解中间件流程： 深入理解 Express 中间件的工作原理（请求进入 -> 中间件链 -> 路由处理 -> 响应发出）。
+中间件顺序： 中间件的加载顺序非常重要，例如，用于解析请求体的中间件 (express.json(), express.urlencoded()) 应放在路由处理之前。错误处理中间件应放在所有路由和普通中间件之后。
+精简中间件： 自定义中间件应保持简洁，只负责单一功能（如日志记录、身份验证、参数校验）。
+正确调用 next()： 中间件在完成任务后，如果希望请求继续流向下一个中间件或路由处理函数，必须调用 next()。如果处理了请求并发送了响应，则不应调用 next()。
+错误处理中间件： 特殊的错误处理中间件函数签名是 (err, req, res, next)。确保在错误处理中间件中发送响应，避免调用 next() 导致进一步的错误。
+4. 请求与响应处理
+
+访问请求数据：
+路径参数：使用 req.params。
+查询参数：使用 req.query。
+请求体：使用 req.body (需要相应的解析中间件，如 express.json())。
+请求头：使用 req.headers。
+发送响应：
+使用 res.send() 发送通用响应。
+使用 res.json() 发送 JSON 格式响应。
+使用 res.status() 设置 HTTP 状态码，然后链式调用发送方法。
+示例：res.status(200).json({ success: true, data: result });
+示例：res.status(404).send('Not Found');
+只发送一次响应： 在一个请求处理周期内，只能向客户端发送一次响应。发送响应后，应停止进一步的处理或确保不会再次发送响应。
+5. 错误处理
+
+集中式错误处理： 在 app.js (或入口文件) 的所有路由和中间件之后，定义一个集中式的错误处理中间件。
+示例：
+JavaScript
+
+app.use((err, req, res, next) => {
+  console.error(err.stack); // 记录错误堆栈
+  res.status(500).send('Something broke!');
+});
+异步错误处理： 在 Promise 或 async/await 中捕获错误，并使用 next(err) 将错误传递给下一个错误处理中间件。
+示例：
+JavaScript
+
+router.get('/', async (req, res, next) => {
+  try {
+    const users = await userService.findUsers();
+    res.json(users);
+  } catch (err) {
+    next(err); // Pass error to error handling middleware
+  }
+});
+自定义错误类： 对于特定类型的业务错误，可以定义自定义错误类，包含状态码和错误信息，方便在错误处理中间件中区分处理。
+6. 异步操作与 Express
+
+async/await 在路由和中间件中的应用： 在 Express 的路由处理函数和中间件中使用 async 关键字，并在其中使用 await 调用 Promise 返回的异步函数。确保使用 try...catch 或 .catch() 捕获异步操作中的错误，并使用 next(err) 传递给错误处理中间件。
+7. 安全性考虑 (基本)
+
+使用 Helmet 中间件： 使用 Helmet 库设置各种 HTTP 头，增强应用安全性。
+输入验证： 对所有来自用户的输入进行严格的验证和净化，防止 XSS, SQL 注入等攻击。可以使用像 express-validator 这样的库。
+速率限制： 对 API 接口实施速率限制，防止恶意请求或 DDoS 攻击。可以使用 express-rate-limit 等库。
+依赖安全： 定期更新项目依赖，扫描已知安全漏洞。
+8. 配置管理
+
+配置与代码分离： 将数据库连接字符串、端口号、API 密钥等配置信息存储在环境变量或单独的配置文件中，而不是硬编码到代码中。
+使用配置库： 可以使用像 dotenv (加载 .env 文件到环境变量) 或 config (更复杂的配置管理) 这样的库。
+强制执行：
+
+结合 ESLint 和 Prettier，并配置适合 Express 项目的规则集（例如，Airbnb 规则集通常包含了对 Express 和 Promise/async-await 的规范）。
+进行代码评审，确保团队成员遵循规范。

@@ -1,0 +1,37 @@
+技术栈实施清单：
+
+1. 核心过滤逻辑原型开发 (Web端)
+
+功能需求： 实现基础的疾病和过敏原过滤算法，接收用户健康限制输入并根据菜品数据进行筛选。
+编程语言： Node.js
+理由： 按照您的要求，使用 Node.js 进行后端原型开发。
+框架： Express
+理由： Express 是 Node.js 中常用的轻量级Web应用框架，适合快速构建API服务。
+技术：
+使用 JavaScript 编写过滤函数：根据输入的疾病编码和过敏原编码，遍历菜品数据，应用位运算或其他逻辑进行匹配判断。
+使用 Node.js 内置的数据结构（如 Array/Object）存储和处理菜品数据。
+2. 最简化菜品数据准备
+
+功能需求： 准备少量包含过滤所需字段（疾病黑名单、过敏原编码等）的菜品样本数据。
+技术：
+使用 JSON 文件 或 直接在 Node.js 代码中定义数据结构 (Array of objects)。
+理由： 概念阶段数据量小，无需复杂的数据库，简单文件或代码内定义即可。
+3. 简单输入/输出接口 (Web端)
+
+功能需求： 构建一个能接收用户健康限制输入并返回过滤后菜品列表的API接口。
+编程语言/框架： Node.js / Express。
+技术：
+使用 Express 定义一个 HTTP POST endpoint (例如，app.post('/filter', ...) )。
+使用 Express 的中间件 (如 express.json()) 接收并解析来自客户端的 HTTP POST 请求体中的用户健康限制数据 (通常是 JSON 格式)。
+调用核心过滤逻辑函数，将过滤结果作为 HTTP 响应返回 (通常是 JSON 格式)，使用 res.json() 方法。
+4. 概念验证界面 (Web页面或本地脚本)
+
+功能需求： 构建一个简单的界面，模拟用户输入，调用Web端接口，并显示返回结果，验证基本过滤功能。
+编程语言： HTML, JavaScript (用于Web页面) 或 Node.js (用于本地脚本)
+框架/技术：
+Web页面方式：
+HTML: 创建一个简单的表单 (<form>) 包含输入字段 (如 <input type="text">, <input type="checkbox">)。
+JavaScript: 使用 Workspace API 或 XMLHttpRequest 向Web端接口发送异步 POST 请求。接收响应，解析 JSON 数据，并将返回的菜品列表数据显示在页面上 (例如，使用 DOM 操作动态生成列表)。
+本地脚本方式：
+Node.js: 使用内置的 http 或 https 模块，或安装第三方库如 axios，发送 HTTP POST 请求到Web端接口，接收响应，处理返回的 JSON 数据，并打印结果到控制台。
+理由： 选择最简单的方式快速验证端到端的数据流，不追求复杂的UI和交互。

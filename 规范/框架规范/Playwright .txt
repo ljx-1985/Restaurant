@@ -1,0 +1,173 @@
+Playwright 技术框架规范
+
+1. 引言
+
+1.1 目的
+本文档旨在为基于 Playwright 框架的自动化测试或自动化脚本开发提供一套标准化的技术规范。通过遵循这些规范，旨在提高代码的可读性、可维护性、可重用性和稳定性，促进团队协作，并确保框架的长期健康发展。
+
+1.2 范围
+本规范适用于所有使用 Playwright 进行 Web 自动化（包括端到端测试、功能测试、冒烟测试、数据抓取等）的项目。它涵盖了项目结构、编码风格、设计模式、配置管理、数据处理、报告生成等关键方面。
+
+1.3 指导原则
+
+高内聚，低耦合： 模块职责单一，模块间依赖关系清晰。
+可读性强： 代码逻辑清晰，命名规范，注释必要。
+易于维护： 结构合理，修改某一功能不影响其他不相关的部分。
+可重用性： 常用功能、页面元素、操作逻辑应抽象为可复用组件。
+稳定性： 充分利用 Playwright 的自动等待机制，使用健壮的定位器。
+可扩展性： 框架设计应便于未来添加新的功能或支持新的测试场景。
+2. 项目搭建与依赖管理
+
+2.1 技术栈
+推荐使用 Node.js 作为运行环境，并使用 TypeScript 进行开发，以提供静态类型检查，增强代码健壮性。
+依赖管理工具使用 npm 或 yarn 或 pnpm。
+
+2.2 Playwright 安装
+使用包管理器安装 Playwright 及其浏览器：
+
+Bash
+
+npm install -D @playwright/test # 或 yarn add -D @playwright/test
+npx playwright install          # 安装浏览器二进制文件
+或仅安装 Playwright 库（非测试runner）：
+
+Bash
+
+npm install -D playwright # 或 yarn add -D playwright
+npx playwright install
+2.3 项目初始化
+对于测试项目，推荐使用 Playwright Test 的初始化命令：
+
+Bash
+
+npm init playwright@latest
+对于非测试自动化脚本，根据项目需求手动创建项目结构和配置。
+
+3. 核心设计模式：页面对象模型 (Page Object Model, POM)
+
+3.1 POM 的重要性
+强制使用页面对象模型 (POM) 来分离 UI 交互逻辑与测试/业务逻辑。
+
+UI 逻辑： 页面的元素定位、页面上的操作方法（如点击按钮、输入文本、获取元素文本等）。
+测试/业务逻辑： 测试用例的步骤，业务流程的编排。
+3.2 页面对象 (Page Object) 定义
+
+一个 Page Object 类代表应用的一个页面或一个可复用的页面组件（如头部导航、弹窗）。
+Page Object 类的构造函数通常接收 Page 对象作为参数。
+Page Object 类包含：
+Locator 属性： 定义页面元素的定位器。使用私有或保护属性 (# 或 protected) 存储。
+Action 方法： 封装用户在页面上的操作。方法名应清晰描述操作目的（例如 login(username, password) 而非 typeUsernameAndClickLoginButton(u, p)）。Action 方法通常返回 Promise<void> 或代表下一个页面的 Page Object 实例（如果该操作导致页面导航）。
+Assertion/Validation 方法 (可选但推荐): 封装页面状态的验证，返回 Promise<boolean> 或在内部使用 expect。
+3.3 Locator 定义规范
+
+优先使用 Playwright 推荐的、更具弹性的定位器策略：
+getByRole()：根据元素的 ARIA role 和可访问名称定位。推荐！
+getByText()：根据文本内容定位。推荐！
+getByLabel()：根据关联的 <label> 文本定位。推荐！
+getByPlaceholder()：根据 placeholder 文本定位。推荐！
+getByAltText()：根据 <img> 的 alt 文本定位。推荐！
+getByTitle()：根据元素的 title 属性定位。推荐！
+getByTestId()：根据自定义 data-testid 属性定位。强烈推荐！
+避免使用基于 DOM 结构、层级关系或动态生成的 CSS/XPath 定位器，除非没有其他选择。
+将所有元素的定位器定义在对应的 Page Object 类中，不要将定位器硬编码在测试文件中。
+定位器属性名应清晰描述元素的用途（如 loginButton, usernameInput, errorMessageText）。
+4. 项目结构与文件组织
+
+推荐以下项目结构：
+
+your-playwright-project/
+├── tests/                     # 测试文件目录 (如果使用 Playwright Test)
+│   ├── example.spec.ts        # 示例测试文件
+│   ├── login.spec.ts
+│   └── products.spec.ts
+├── pageObjects/               # Page Object 类目录
+│   ├── basePage.ts            # 基础页面类 (可选)
+│   ├── loginPage.ts
+│   ├── homePage.ts
+│   ├── components/            # 可复用组件的 Page Object
+│   │   └── headerComponent.ts
+│   └── index.ts               # 导出所有 Page Object
+├── utils/                     # 辅助函数、工具类
+│   ├── dataHelper.ts          # 数据生成或处理
+│   ├── allureReporter.ts      # 报告配置相关 (可选)
+│   └── index.ts               # 导出所有工具
+├── config/                    # 配置文件
+│   ├── playwright.config.ts   # Playwright Test 配置 (如果使用)
+│   └── environments.json      # 环境相关的配置 (URLs, credentials)
+├── data/                      # 测试数据文件
+│   ├── testData.json
+│   └── users.csv              # 或其他格式
+├── reports/                   # 测试报告输出目录 (通常在 .gitignore 中)
+├── playwright-report/         # HTML 报告目录 (通常在 .gitignore 中)
+├── .gitignore                 # Git 忽略文件
+├── package.json
+├── tsconfig.json              # 如果使用 TypeScript
+└── README.md
+文件命名规范：
+
+测试文件：feature.spec.ts 或 feature.test.ts
+Page Object 类文件：pageNamePage.ts 或 componentNameComponent.ts
+工具类文件：utilNameHelper.ts 或 utilNameUtils.ts
+5. 编码标准与最佳实践
+
+5.1 命名规范
+
+变量、函数、方法名使用 camelCase。
+类名使用 PascalCase。
+常量使用 UPPER_CASE 或 PascalCase (根据项目约定)。
+文件名使用 kebab-case 或 camelCase (根据项目约定)。
+命名应具有描述性，避免使用缩写，除非是广为人知的缩写。
+5.2 异步操作处理
+
+所有 Playwright API 调用都是异步的，必须使用 async/await 处理。
+test 函数或自定义方法如果包含异步操作，必须标记为 async。
+5.3 等待策略
+
+充分信赖 Playwright 的自动等待机制（例如，.click(), .fill(), .isVisible() 等方法在执行前会自动等待元素满足可操作条件）。
+避免过度使用硬编码的 page.waitForTimeout(ms)。
+只有在处理复杂的非标准等待条件时，才考虑使用 page.waitForSelector(), page.waitForFunction(), page.waitForLoadState() 等显式等待方法。
+5.4 断言 (Assertions)
+
+使用 Playwright 的内置断言库 expect。
+断言应该清晰、具体，并提供有用的错误消息（尽管 Playwright 的断言已经很详细）。
+避免在一个断言中检查过多不相关的状态。
+5.5 错误处理与日志记录
+
+使用 try...catch 块处理预期可能发生的错误，例如元素不存在、网络请求失败等。
+在关键步骤或捕获到错误时，使用日志记录（例如 console.log, console.error 或集成日志库）输出信息，便于调试和问题追踪。
+失败时自动截取屏幕截图（Playwright Test 默认支持）。
+5.6 测试数据管理
+
+将测试数据与测试逻辑分离。
+小型数据可以直接在测试文件中定义或作为参数传递给 Page Object 方法。
+复杂或大量数据存储在单独的文件中（JSON, CSV 等），通过工具函数读取和加载。
+敏感数据（如密码、API Key）不应直接硬编码，应通过配置文件、环境变量或安全的密钥管理系统传递。
+6. 配置管理
+
+使用 playwright.config.ts 管理 Playwright Test 的运行配置（浏览器、并发数、超时、baseURL、报告器等）。
+创建单独的配置文件（如 config/environments.json）管理环境相关的配置，如不同环境的 URL、测试账号等。
+通过环境变量来选择当前运行的环境配置。
+7. 测试报告
+
+配置使用 Playwright 内置的 HTML 报告器，它提供了交互式的测试结果查看界面，包括步骤、截图、视频、日志等。
+可以考虑集成第三方报告工具，如 Allure Reporter，提供更丰富的报告功能。
+8. 环境管理
+
+明确区分开发环境、测试环境、预生产环境、生产环境。
+通过配置或环境变量，方便地切换测试运行的目标环境。确保不同环境的配置信息得到妥善管理和区分。
+9. CI/CD 集成
+
+确保测试脚本可以在 CI/CD 环境中无头模式下运行。
+配置 CI/CD 流水线，在代码提交、合并或其他触发条件下自动运行 Playwright 测试。
+配置 CI/CD 将测试报告作为构建产物进行存档或发布。
+10. 维护与演进
+
+定期回顾和重构测试代码，移除冗余或过时的部分。
+及时更新 Playwright 及其他依赖库，以获取新功能和修复安全问题。
+随着应用的发展，相应更新 Page Object 和测试用例。
+保持文档（如 README.md）的更新，描述框架的用法和结构。
+附录 (可选)
+
+常见操作的代码示例
+自定义定位器的实现方式
+与其他工具的集成（如数据生成库、断言库）

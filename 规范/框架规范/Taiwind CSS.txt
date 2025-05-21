@@ -1,0 +1,158 @@
+Cursor 项目 Tailwind CSS 框架规范
+
+1. 引言
+
+Tailwind CSS 是 Cursor 项目前端主要的样式框架。它采用“实用工具优先”的方法，通过直接在 HTML/JSX 中应用预设的实用工具类来构建界面。这种方法可以极大地提高开发速度和样式一致性。然而，如果没有明确的规范，过度或不当使用实用工具类也可能导致 HTML/JSX 代码变得难以阅读和维护。
+
+本规范旨在提供在 Cursor 项目中使用 Tailwind CSS 的指导原则和具体要求，确保其优势得到最大化，同时避免潜在的问题。它将定义核心思想、配置管理、实用工具类使用、组件化策略等。
+
+2. 核心思想与定位
+
+实用工具优先 (Utility-First): 这是 Tailwind 的核心。通过组合小巧、单一用途的实用工具类（如 flex, pt-4, text-center）来直接在标记语言中构建复杂组件的样式。
+定制化 (Customizable): Tailwind 是高度可配置的。项目的颜色、间距、字体、断点等应在统一的配置文件中管理。
+按需生成 (Just-in-Time - JIT): Tailwind 只生成你在代码中实际使用的 CSS 类，保证最终生成的 CSS 文件体积小。
+在 Cursor 项目中的定位: Tailwind CSS 是 Cursor 项目前端主要的样式解决方案。它用于构建组件和布局的样式。传统的 CSS 或 Sass 文件（如果使用）主要用于：
+包含 @tailwind base 和 @tailwind components、@tailwind utilities 指令的主入口文件。
+包含 @layer base, @layer components, @layer utilities 中定义的项目全局样式或自定义实用工具类。
+极少数 Tailwind 难以实现或不适合用实用工具类组合表示的复杂、全局样式。
+（可选）结合 CSS Modules 或其他库实现组件样式隔离（如果仅使用 Tailwind 类，CSS Modules 的隔离作用减弱，但 .module.css 后缀仍可用于组织文件）。
+3. 安装与配置
+
+安装: 使用 npm/yarn/pnpm 安装 tailwindcss 及其对等依赖（postcss, autoprefixer）。
+初始化: 运行 npx tailwindcss init -p 生成 tailwind.config.js 和 postcss.config.js 配置文件。
+主 CSS 文件: 创建一个主 CSS 文件（例如 src/index.css 或 src/main.scss），并包含 Tailwind 的指令：
+CSS
+
+@tailwind base;     /* 注入 Tailwind 的基础样式和 Normalize */
+@tailwind components; /* 注入 `@apply` 等定义的组件类 */
+@tailwind utilities;  /* 注入 Tailwind 核心实用工具类 */
+配置 tailwind.config.js: 这是 Tailwind 的核心配置文件。应在此文件中进行项目的定制化：
+配置 content（或旧版本的 purge），指定哪些文件包含了 Tailwind 类名，以便在生产构建时移除未使用的类。
+扩展或覆盖主题 (Theme) 配置，定义项目的设计系统，如颜色 (colors)、间距 (spacing)、字体 (fontFamily, fontSize)、断点 (screens) 等。
+定义自定义实用工具类或组件类。
+启用变体 (variants) 或插件 (plugins)。
+4. 实用工具类使用
+
+直接应用: 主要通过在 HTML/JSX 元素的 class 或 className 属性中组合实用工具类来应用样式。
+JavaScript
+
+<div className="flex items-center justify-center h-screen bg-gray-100">
+    <button className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700">
+ 1            Click Me
+</button>
+</div>
+```   
+1.
+github.com
+github.com
+
+类名顺序: 虽然 Tailwind 对类名的顺序没有严格要求，但为了提高可读性，推荐采用一致的类名排序。常用的排序方式是按功能类别或按字母顺序。可以使用 Prettier 的 @prettier/plugin-tailwind 插件自动排序类名。推荐的排序大致遵循：Layout -> Flexbox & Grid -> Box Model -> Typography -> Backgrounds -> Borders -> Effects -> Interactivity -> SVG -> States (hover, focus etc.) -> Responsiveness。
+响应式设计: 使用 Tailwind 内置的响应式前缀 (sm:, md:, lg:, xl:, 2xl:) 来为不同断点应用不同的样式。采用 Mobile-First 思维进行响应式开发。
+JavaScript
+
+<div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4">Responsive Div</div>
+状态变体: 使用状态前缀（如 hover:, focus:, active:, disabled:, group-hover:, peer-focus: 等）为元素的特定状态应用样式。
+JavaScript
+
+<button className="bg-blue-500 hover:bg-blue-700 focus:outline-none focus:ring-2">Button</button>
+任意值 (Arbitrary Values): 在配置文件未覆盖的特定场景下，可以使用方括号 [ ] 来应用任意 CSS 值（例如 top-[117px], text-[#1a202c]）。谨慎使用任意值，优先在 tailwind.config.js 中进行配置扩展，以保持设计系统的一致性。
+5. 组件化与复用
+
+虽然 Tailwind 鼓励直接在标记中应用实用工具类，但在大型项目中，对于重复出现的复杂模式，需要通过组件化来提高可维护性和复用性。
+
+封装实用工具类: 推荐在 React 组件内部封装 Tailwind 实用工具类。这是 Cursor 项目主要的 Tailwind 组件化策略。将一组相关的实用工具类应用于组件内部的元素，然后通过组件的 Prop 来控制其状态或变体。
+
+JavaScript
+
+// Button.tsx
+interface ButtonProps {
+    variant?: 'primary' | 'secondary';
+    disabled?: boolean;
+    onClick: () => void;
+    children: React.ReactNode;
+}
+
+const Button: React.FC<ButtonProps> = ({ variant = 'primary', disabled = false, onClick, children }) => {
+    const baseStyles = 'px-4 py-2 font-bold rounded focus:outline-none focus:ring-2';
+    const variantStyles = variant === 'primary'
+        ? 'bg-blue-500 text-white hover:bg-blue-700 focus:ring-blue-500'
+        : 'bg-gray-200 text-gray-800 hover:bg-gray-300 focus:ring-gray-300';
+    const disabledStyles = disabled ? 'opacity-50 cursor-not-allowed' : '';
+
+    // 使用 clsx 或 classnames 库方便地合并类名
+    const className = clsx(baseStyles, variantStyles, disabledStyles);
+
+    return (
+        <button className={className} onClick={onClick} disabled={disabled}>
+            {children}
+        </button>
+    );
+};
+使用 @apply 指令 (可选): @apply 指令允许在传统的 CSS 文件中组合 Tailwind 实用工具类来创建自定义 CSS 类。这可以用于创建一些通用的组件类或更具语义的类名。
+
+CSS
+
+/* styles/components.css */
+@layer components {
+    .btn {
+        @apply px-4 py-2 font-bold rounded focus:outline-none focus:ring-2;
+    }
+    .btn-primary {
+        @apply btn bg-blue-500 text-white hover:bg-blue-700 focus:ring-blue-500;
+    }
+    .btn-secondary {
+         @apply btn bg-gray-200 text-gray-800 hover:bg-gray-300 focus:ring-gray-300;
+    }
+}
+使用建议: 优先在 React 组件内部封装实用工具类。仅在需要在多个组件中共享相同外观和行为的通用组件类时，或者创建一些纯粹的语义化容器类时，考虑使用 @apply。避免滥用 @apply 来创建大量的单用途或低复用性类。
+自定义组件类 (@layer components): 如果决定使用 @apply 创建自定义组件类，应将这些定义放在主 CSS 文件中的 @layer components { ... } 块内。
+
+6. 自定义与扩展
+
+修改 tailwind.config.js: 所有的设计系统定制（颜色、间距、字体、断点、阴影、圆角等）都应在 tailwind.config.js 中进行。优先扩展 (extend) 默认主题，而不是完全覆盖，以保留 Tailwind 提供的丰富实用工具类。
+添加自定义实用工具类: 如果有 Tailwind 默认没有提供的、项目特有的、且具有通用性的样式模式，可以在 tailwind.config.js 中通过插件定义，或者在主 CSS 文件中的 @layer utilities { ... } 块内使用 @apply 或直接编写 CSS 定义。
+插件 (Plugins): 使用 Tailwind 插件来添加新的实用工具类、组件、基础样式或变体。
+7. 与 JavaScript/TypeScript 的交互
+
+动态类名: 当需要根据组件状态或 Prop 动态应用类名时，推荐使用 clsx 或 classnames 库。它们可以方便地以条件方式组合多个类名字符串。
+JavaScript
+
+import clsx from 'clsx';
+
+const MyComponent = ({ isActive }) => {
+    const className = clsx(
+        'base-styles',
+        isActive && 'active-styles',
+        { 'disabled-styles': isDisabled }
+    );
+    return <div className={className}>...</div>;
+};
+在 JS/TS 中引用 Tailwind 配置值: 如果需要在 JS/TS 代码中获取 Tailwind 配置中的值（如断点、间距值），可以通过构建工具（如 Webpack, Vite）的配置或特定库来实现，避免硬编码。
+8. 性能优化
+
+配置 Purging: 确保 tailwind.config.js 中的 content（或 purge）配置正确覆盖了所有使用 Tailwind 类的文件类型（包括 HTML, JSX, TSX, Vue 文件等），以便在生产构建时能够正确移除未使用的 CSS 类。
+最小化自定义 CSS: 尽量使用 Tailwind 的实用工具类和配置来构建样式，减少手写的传统 CSS 数量。
+9. 文件组织
+
+tailwind.config.js 和 postcss.config.js 文件应位于项目根目录。
+主 CSS 文件（包含 @tailwind 指令）应位于项目约定好的样式入口位置（例如 src/index.css, src/assets/styles/main.scss）。
+使用 @apply 定义的自定义组件类或实用工具类，可以组织在单独的 CSS 或 Sass 文件中，并在主 CSS 文件中引入。
+结合组件化思想，如果组件样式主要由 Tailwind 类构成，可以将少量必要的自定义样式或 @apply 定义与组件代码放在一起（例如在 .module.css 或 .styled.ts 文件中）。
+10. 应避免的实践
+
+禁止在 CSS 中使用 ID 选择器（已在通用 CSS 规范中提及）。
+禁止使用 !important（极少数例外已在通用 CSS 规范中提及）。
+禁止覆盖 Tailwind 的核心实用工具类（例如直接写 .flex { ... }）。如果需要修改，请在tailwind.config.js` 中进行主题扩展或覆盖。
+避免创建大量的低复用性 @apply 类: 如果一个 @apply 类只在一个地方使用，直接在标记中使用实用工具类可能更清晰。
+避免在 tailwind.config.js 配置之外使用任意值（如 top-[117px]），除非它是独一无二且不会重复出现的。优先在配置中定义常用的尺寸、颜色等。
+避免使用过长或无序的实用工具类列表: 使用类名排序工具提高可读性。
+避免在 Tailwind 项目中大量编写与 Tailwind 实用工具类功能重复的传统 CSS。
+11. 自动化工具
+
+PostCSS: 这是 Tailwind 的运行基础。确保项目构建流程正确配置了 PostCSS。
+Stylelint: 配置 Stylelint，并使用 stylelint-config-recommended, stylelint-config-standard-scss (如果使用 Sass), 以及必须安装 stylelint-config-tailwindcss 插件来检查 Tailwind 特有的用法和顺序。
+Prettier: 配置 Prettier，并安装和启用 @prettier/plugin-tailwind 插件，用于自动排序 Tailwind 类名。
+ESLint: 配置 ESLint，可以安装相关插件检查类名是否符合规范（例如 eslint-plugin-tailwindcss）。
+12. 与通用规范的关系
+
+本 Tailwind CSS 框架规范是 Cursor 项目通用前端开发规范和 React 编码风格规范中关于样式实现的具体落地指南。它替代了通用 CSS 规范中关于 BEM 命名在组件样式中的强制性（因为 Tailwind 直接用实用工具类），但通用 CSS 规范中关于颜色、单位、性能、可访问性、注释等原则仍然适用。

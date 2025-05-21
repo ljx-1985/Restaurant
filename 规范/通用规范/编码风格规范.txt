@@ -1,0 +1,186 @@
+Cursor 项目通用编码风格规范 (包含 Git 使用规范)
+
+1. 引言
+
+编码风格和版本控制实践是软件开发中协作和效率的基石。Cursor 项目采用 Git 作为版本控制系统。统一的编码风格和规范化的 Git 使用习惯能够：
+
+提高代码的可读性，使团队成员更容易理解和熟悉彼此的代码。
+降低认知负担，减少在不同代码风格和 Git 工作流之间切换带来的困扰。
+提高代码的可维护性，便于追踪、调试和修复 Bug。
+减少因风格差异和不规范提交导致的代码评审摩擦和合并冲突。
+构建清晰、有意义的项目提交历史，便于回溯和自动化处理（如生成 Changelog）。
+提升项目的整体专业性和代码质量。
+本通用编码风格规范为 Cursor 项目设定了一套跨语言的核心编码原则，并详细规定了使用 Git 进行版本控制时的具体要求。所有贡献者都必须遵守。
+
+2. 总体原则
+
+一致性 (Consistency): 这是最重要的原则。在项目内部，尤其是在同一个文件、同一个模块或同一个组件中，务必保持风格的一致性。在 Git 使用上，提交信息、分支命名等也必须保持一致。
+可读性 (Readability): 代码首先是写给人看的，其次才是机器执行的。编写清晰、易于理解的代码，避免过度“聪明”或难以理解的技巧。良好的 Git Commit Message 和分支名称同样能提高项目历史的可读性。
+简洁性 (Simplicity): 优先选择简单直观的实现方式，而不是复杂晦涩的技巧。代码应只做它应该做的事情。Git Commit 也应尽量保持原子性，每次提交只包含一个逻辑修改。
+意图明确 (Intent Clarity): 代码应清晰地表达其作者的意图。通过良好的命名、适当的注释和清晰的结构来体现这一点。Git Commit Message 应清晰地说明本次提交的目的和内容。
+遵循现有规范 (Follow Existing Conventions): 在进入新的文件或模块时，应首先观察并遵循其中已有的风格。同时，务必遵循本通用规范、项目指定的语言特定规范以及本规范中的 Git 使用规范。
+3. 通用格式化规则
+
+尽管具体的缩进字符、长度限制等可能因语言而异，但以下通用原则适用于所有 Cursor 代码：
+
+缩进 (Indentation): 使用一致的缩进风格来体现代码的逻辑结构层次。禁止在同一个文件中混用 Tab 和空格进行缩进。项目的自动化工具（如 Prettier, Black）会处理具体的缩进字符和宽度，开发者应依赖工具。
+空格 (Spacing): 在操作符、关键字、函数参数、列表元素等周围使用适当的空格，以提高可读性。例如，二元运算符两侧应有空格，逗号后应有空格。
+空行 (Blank Lines): 使用空行分隔代码的不同逻辑块、函数定义、类定义等，以提高代码的组织性和可读性。避免过多连续的空行。
+行长度 (Line Length): 限制单行代码的长度，通常建议不超过 80-120 个字符（具体数值可能取决于语言特定规范或项目约定）。过长的行会降低可读性，尤其是在分屏查看代码时。
+括号 (Parentheses): 在需要明确操作符优先级或提高可读性时使用括号。
+4. 通用命名约定
+
+命名是提高代码可读性和可维护性的关键。良好的命名应该：
+
+描述性 (Descriptive): 名称应清晰地描述变量、函数、类、模块等的用途、内容或行为。避免使用含糊不清或过于简短的名称（除非是循环计数器等常见场景）。
+一致性 (Consistency): 在项目的不同部分，对相同概念使用相同的命名方式。在满足语言特定约定的同时，确保概念命名统一。
+意图明确: 名称应反映其代表的“什么”或完成的“什么”。遵循语言特定规范中关于变量、函数、类、常量的命名风格（如 camelCase, snake_case, PascalCase, UPPER_CASE）。
+避免缩写: 除非缩写非常普遍且不易引起歧义（如 ID, URL, HTTP），否则应使用完整的单词。
+遵循语言约定: 在满足上述原则的基础上，严格遵循各语言社区或项目指定的命名风格。
+5. 注释
+
+注释的目的是解释代码的为什么或做什么中非显而易见的部分，而不是简单地复述代码。
+
+解释意图: 注释应解释代码段背后的逻辑、设计决策、复杂算法、限制条件、Workaround 或为什么选择某种特定实现方式。
+解释非显而易见的“做什么”: 对于复杂的函数或代码块，提供一个高层概览说明其整体功能。API 文档（通常由代码注释生成）属于此类。
+保持更新: 注释必须与代码保持同步。如果代码修改了，相关注释也必须更新。过时的注释会误导读者。
+避免过度注释: 不要注释那些从代码本身就能清楚看出的内容。
+TODO / FIXME 标记: 使用标准的 TODO: 标记未完成或待优化的工作；使用 FIXME: 标记已知存在问题或需要修正的代码。应包含简要说明和（如果可能）作者姓名/标识。
+6. 代码结构与组织
+
+良好的代码结构使项目更易于导航和理解。
+
+文件/模块: 将相关的功能或代码组织到逻辑单元（文件、模块）中。文件/模块应有明确的用途和职责。文件命名应清晰地反映其内容或功能。
+函数/方法: 函数和方法应职责单一，只做一件事情。尽量保持函数和方法的简短，提高可读性和可测试性。
+类/组件: 类或组件应封装相关的数据和行为，具有清晰的接口和职责。
+依赖管理: 模块之间的依赖关系应清晰，避免不必要的循环依赖。
+7. 错误处理
+
+采用一致的错误处理策略。
+
+在同一个模块或组件内，应使用统一的方式来表示和处理错误（例如，统一返回错误码、抛出异常或使用特定的错误对象）。
+文档应清晰地说明错误处理策略以及函数/方法可能返回或抛发的错误类型。
+8. 版本控制 (使用 Git)
+
+Cursor 项目使用 Git 进行版本控制，以下是关于 Git 使用的具体规范：
+
+8.1 Commit Message 规范:
+
+Commit Message 提供了代码变更的上下文，清晰的提交信息有助于代码评审、问题追踪和自动化流程。
+格式: 强烈推荐或要求遵循 Conventional Commits 规范（或团队共同商定的类似格式）。基本结构如下：
+type(scope): subject
+
+[空行]
+
+body (可选)
+
+[空行]
+
+footer (可选)
+type (必需): 本次提交的类型。常用类型包括：
+feat: 新功能 (A new feature)
+fix: Bug 修复 (A bug fix)
+docs: 文档变更 (Documentation only changes)
+style: 不影响代码含义的格式化、空格、缺少分号等 (Changes that do not affect the meaning of the code)
+refactor: 重构代码，不引入新功能或修复 Bug (A code change that neither fixes a bug nor adds a feature)
+test: 添加或修改测试 (Adding missing tests or correcting existing tests)
+chore: 构建过程或辅助工具的变更，不影响源文件或测试文件 (Other changes that don't modify src or test files)
+ci: CI 配置或脚本的变更 (Changes to our CI configuration files and scripts)
+scope (可选): 本次提交影响的范围，例如是前端、后端认证模块、某个特定组件等。使用括号包围，如 feat(frontend-user-profile):。
+subject (必需): 简洁的主题行。
+使用祈使句，现在时态（例如，"add", "fix", "change"）。
+首字母小写。
+末尾不加句号。
+长度通常不超过 50 个字符。
+空行 (必需): 分隔主题行和正文。
+body (可选): 更详细地说明本次提交的动机、实现细节、上下文信息等。
+每行长度通常不超过 72 个字符。
+解释为什么进行此更改，而不是简单地重复做了什么。
+footer (可选): 引用关联的 Issue 号（例如 Closes #123, Fixes #456），或说明不兼容变更（以 BREAKING CHANGE: 开头）。
+示例 Commit Message:
+feat(backend-api): implement user registration endpoint
+
+Adds a new POST /users endpoint to handle user registration.
+Includes basic input validation and password hashing.
+
+Closes #10
+fix(frontend): resolve button hover state issue
+
+Corrected the CSS for button hover states which was previously
+not applying correctly in Safari due to a vendor prefix issue.
+refactor(auth): simplify token generation logic
+
+Replaced the custom token generation algorithm with a standard
+JWT library to improve security and maintainability.
+
+BREAKING CHANGE: Token format has changed. Existing tokens
+will need to be reissued.
+8.2 分支命名规范:
+
+使用清晰、描述性的分支名称，反映分支的目的和内容。
+遵循统一的前缀约定：
+feature/: 开发新功能 (例如：feature/user-onboarding, feature/dashboard-widgets)
+bugfix/: 修复 Bug (例如：bugfix/login-form-validation, bugfix/api-pagination)
+hotfix/: 紧急 Bug 修复，通常直接从主分支或发布分支拉取 (例如：hotfix/critical-security-patch)
+chore/: 非功能性修改，如构建、文档、依赖更新等 (例如：chore/update-dependencies, chore/add-ci-config)
+refactor/: 代码重构 (例如：refactor/api-error-handling, refactor/frontend-state-management)
+docs/: 文档相关修改 (例如：docs/update-install-guide)
+分支名称应使用小写字母、数字和连字符 - 分隔单词。避免使用空格或下划线。
+分支名称应尽量简洁但足够描述性。
+与 Issue 关联的分支名可以包含 Issue 号，例如 bugfix/123-login-error。
+8.3 提交粒度 (Atomic Commits):
+
+每次提交（Commit）应包含一个独立、逻辑完整的变更单元。这意味着一个 Commit 应该只解决一个 Bug、添加一个功能的一小部分、或完成一次独立的重构。
+避免将多个不相关的修改（例如，修复一个 Bug 同时添加一个新功能）放在同一个 Commit 中。
+小的、集中的 Commit 更容易理解、评审和回滚。
+8.4 .gitignore 文件:
+
+维护一个干净且全面的 .gitignore 文件，位于项目根目录。
+忽略所有不应被版本控制跟踪的文件，包括：
+编译生成的文件和目录 (例如，build/, dist/)
+依赖包目录 (例如，node_modules/, venv/, __pycache__/)
+临时文件和编辑器/IDE 配置文件 (例如，.idea/, .vscode/, *.swp)
+日志文件 (例如，*.log)
+敏感信息文件 (例如，配置文件中的密码、密钥等 - 更好的做法是使用环境变量或秘密管理系统，而非将敏感信息放入文件)。
+可以使用 gitignore.io 等工具根据项目使用的语言和工具生成基础 .gitignore 模板。
+8.5 Tagging (可选):
+
+如果项目使用 Git Tag 来标记版本发布，应遵循一致的 Tag 命名规范。
+通常建议遵循语义化版本控制 (Semantic Versioning) 2.0.0 规范，使用 vX.Y.Z 的格式（例如，v1.0.0, v1.1.0, v1.0.1）。
+Tag 应指向相关的 Commit（通常是发布分支上的 Commit）。
+8.6 工作流程 (Workflow):
+
+项目应采用一个明确的 Git 工作流程（例如，基于主干开发 - Trunk-Based Development, Git Flow 的简化版本, GitHub Flow 等）。具体工作流程应在 CONTRIBUTING.md 或独立的文档中详细说明，但所有贡献者必须严格遵守。
+8.7 Pull Request / Merge Request:
+
+提交 Pull Request (PR) 或 Merge Request (MR) 时，标题和描述应清晰地概括本次变更的内容和目的。
+描述中应引用相关的 Issue 号，说明解决了什么问题或添加了什么功能。
+PR/MR 的提交信息应符合 8.1 的规范。在合并时，可以根据需要选择 squash 或 rebase commit。
+9. 自动化工具
+
+强烈推荐并要求使用自动化工具来帮助强制执行编码风格和部分 Git 规范。
+
+代码格式化工具 (Formatters): 使用 Prettier, Black, autopep8 等工具自动格式化代码。
+代码风格检查工具 (Linters): 使用 ESLint, Pylint, Flake8, Stylelint 等工具检查代码是否符合风格规范。
+Commit Message 检查工具: 使用 commitlint 等工具检查 Commit Message 是否符合 Conventional Commits 规范。
+Pre-commit Hooks: 利用 Husky (Node.js 项目) 或 pre-commit (Python 项目) 等工具，在代码提交前自动运行格式化工具、代码检查工具和 Commit Message 检查工具，阻止不符合规范的提交。
+持续集成 (CI): 在 CI 流程中加入风格检查、测试和构建步骤，确保只有符合规范且功能正常的代码才能被合并。
+10. 处理现有代码
+
+当修改不符合风格规范的现有代码时，应遵循“童子军军规”：离开时让营地比来时更干净。在修改代码的同时，逐步将其周边代码调整为符合当前规范的风格。
+避免一次性提交大量纯风格修改的代码（除非是经过团队讨论并批准的大规模格式化或自动化工具修正）。
+11. 例外情况
+
+在极少数情况下，为了性能优化、与外部库严格对齐或解决特定限制，可能需要破例不遵守某些风格规范。
+
+任何风格例外的行为都必须经过团队讨论和批准。
+例外之处必须在代码中通过注释或相关文档清晰地说明原因。
+12. 评审中的风格检查
+
+代码评审者有责任检查代码是否符合本通用规范、相关的语言特定规范以及 Git 使用规范。然而，对于可以通过自动化工具解决的格式化问题，评审者不应过度关注，应鼓励作者使用工具自动修复。评审的重点应放在更高级的风格原则（如命名、结构、注释的清晰度）以及代码本身的逻辑、质量和 Git Commit/分支的规范性。
+
+13. 与语言特定规范的关系
+
+本通用规范是 Cursor 项目所有代码风格的基石。在此基础上，每个开发者还必须严格遵守所使用语言的特定编码风格规范。当两者存在重叠或潜在冲突时，通常语言特定规范提供了更详细和具体的规则，应优先参考。本通用规范的目的是确保跨语言的一致性和 Git 使用的规范化。
+
+14. 总结

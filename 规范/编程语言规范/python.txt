@@ -1,0 +1,181 @@
+好的，这是一份为 Cursor 项目量身定制的编程语言 Python 规范。这份规范在项目通用的编码风格规范基础上，增加了针对 Python 语言特有的详细要求和最佳实践。它主要基于官方推荐的 PEP 8 -- Style Guide for Python Code，并结合现代 Python 开发的一些常用实践。
+
+Cursor 项目 Python 编码风格规范
+
+1. 引言
+
+Python 是 Cursor 项目后端开发使用的主要语言之一。统一的 Python 编码风格对于保障后端代码的可读性、可维护性、协作效率和代码质量至关重要。本规范基于广泛认可的 PEP 8，并补充了 Cursor 项目内部的约定和现代 Python 特性（如类型提示）的使用要求。所有贡献者在编写 Python 代码时都必须严格遵守本规范。
+
+本规范是对 Cursor 项目通用编码风格规范的补充。通用规范中的原则（如一致性、可读性、意图明确、使用自动化工具等）同样适用于 Python 代码。
+
+2. 基于 PEP 8
+
+本规范的核心是 PEP 8。所有 PEP 8 中未明确提及或与本规范无冲突的部分，都应遵循 PEP 8 的规定。本规范旨在强调 PEP 8 的关键点，并为 Cursor 项目添加特定的要求。
+
+推荐做法: 直接使用自动化工具（如 Black）来处理大部分 PEP 8 相关的格式化问题，这将大大减少手动检查风格的工作量。
+
+3. 代码布局 (Code Layout)
+
+缩进 (Indentation): 使用 4 个空格 进行缩进。在任何情况下都禁止使用 Tab 字符进行缩进。
+依赖自动化格式化工具来确保一致性。
+行长度 (Line Length):
+每行代码长度建议不超过 79 个字符。
+对于文档字符串或注释，行长度可以放宽到 72 个字符。
+在某些情况下（如长字符串、URL、复杂的列表或字典），可以允许行长超过 79 个字符，但应尽量保持在 99 个字符以内。使用圆括号 ()、方括号 [] 或花括号 {} 进行隐式续行，或使用反斜杠 \ 进行显式续行（后者应尽量避免）。
+空行 (Blank Lines):
+顶级函数和类定义之间空 两行。
+类中的方法定义之间空 一行。
+函数或方法内部，可以使用空行来分隔逻辑相关的代码块，提高可读性。
+避免文件末尾出现多余的空行。
+文件编码 (Source File Encoding): 源文件必须使用 UTF-8 编码。在 Python 3 中，这是默认设置，通常无需特殊声明。
+导入 (Imports):
+每行只导入一个模块，除非使用 from ... import ... 并且导入的名称很少。
+导入语句应放在文件顶部，位于模块 Docstring 之后，全局变量之前。
+导入应按标准库、第三方库、项目内部模块的顺序分组，每组之间空一行。
+在每个分组内部，导入应按模块的字母顺序排序。
+强烈推荐使用绝对导入（例如 import cursor_backend.utils）而不是相对导入（例如 from . import utils），特别是对于大型项目。
+禁止使用通配符导入（from module import *），因为它会污染命名空间，难以判断名称的来源。
+4. 空白符 (Whitespace)
+
+遵循 PEP 8 关于表达式和语句中空白符使用的详细规则：
+
+在二元运算符（+, -, *, /, =, >, <, ==, !=, and, or 等）两侧各保留一个空格。
+在函数调用时，参数列表的括号内侧不要有空格：my_function(param1, param2) 而不是 my_function( param1, param2 )。
+在列表、元组、字典的元素/键值对之间，逗号 , 后面保留一个空格，前面不保留空格：[1, 2, 3], (a, b), {key: value}。
+冒号 : 在切片时两侧可以省略空格，但在字典中表示键值对时后面要有一个空格：list[1:5], {key: value}。
+赋值符号 = 在函数参数列表中表示默认值时，两侧不要有空格：def func(param=default_value):。
+不要在行末尾添加多余的空格。
+5. 命名约定 (Naming Conventions)
+
+遵循 PEP 8 的命名约定，并保持项目内部的一致性：
+
+模块 (Modules): 小写字母，可以使用下划线分隔单词（my_module.py）。避免使用连字符 -。
+包 (Packages): 小写字母，不使用下划线（my_package/）。
+类 (Classes): 采用大驼峰命名法 (CapWords/PascalCase)（MyClass, HttpRequest）。
+函数 (Functions), 方法 (Methods), 变量 (Variables): 采用小写字母和下划线分隔单词 (snake_case)（my_function, method_name, variable_name）。
+常量 (Constants): 采用全大写字母和下划线分隔单词（CONSTANT_VALUE, MAX_RETRIES）。常量应定义在模块的顶层。
+私有名称:
+以单下划线开头（_private_name）表示“内部使用”的名称，不会被 from module import * 导入。
+以双下划线开头（__mangled_name）会触发名称修饰 (Name Mangling)，用于避免子类覆盖。
+避免单字母名称: 除了一些通用的、上下文清晰的名称（如循环中的 i, 坐标 x, y）外，避免使用单字母名称。名称应具有描述性。
+6. 注释和文档字符串 (Comments and Docstrings)
+
+内联注释 (Inline Comments): 使用 # 符号。用于解释代码的为什么，而不是简单地复述做了什么。例如，解释某个非显而易见的逻辑、特定的数值含义、Workaround 或设计决策。注释应与代码同步更新。
+块注释 (Block Comments): 使用 # 符号，应用于一段代码或整个函数/方法。
+文档字符串 (Docstrings): 使用三个双引号 """文档字符串"""。用于为模块、类、函数、方法提供详细的说明。
+必需为以下对象编写 Docstring:
+所有公共模块。
+所有公共类。
+所有公共函数和方法。
+私有函数和方法如果逻辑复杂或用途不明确，也应考虑编写 Docstring。
+Docstring 风格: Cursor 项目推荐使用 Google Style Docstrings 或 reST Style Docstrings。项目应在这两者中选择并统一使用一种风格。这两种风格都支持清晰地描述参数、返回值、异常等。
+Docstring 内容:
+第一行是简洁的单行摘要，概括对象的功能。
+摘要后空一行。
+正文提供更详细的说明，包括功能细节、算法、用法、副作用、限制等。
+使用特定部分（如 Args:, Returns:, Raises:）来描述参数、返回值、异常等。
+可以包含代码示例 (Examples:)。
+示例 Docstring (Google Style):
+
+Python
+
+def fetch_user_profile(user_id: str) -> dict:
+    """Fetches a user's profile data from the database.
+
+    Retrieves the user record based on their unique ID and returns
+    a dictionary containing key profile information.
+
+    Args:
+        user_id: The unique identifier of the user.
+
+    Returns:
+        A dictionary containing the user's profile data.
+
+    Raises:
+        UserNotFound: If a user with the given user_id is not found.
+        DatabaseError: If there is an issue connecting to or querying the database.
+
+    Examples:
+        >>> profile = fetch_user_profile("user_123")
+        >>> print(profile['username'])
+        john_doe
+    """
+    # ... implementation ...
+    pass
+7. 类型提示 (Type Hinting)
+
+强烈推荐在所有 Python 代码中使用类型提示 (PEP 484, PEP 526)。
+为函数参数、返回值、变量、类属性添加类型注解。
+使用类型提示可以提高代码的可读性，使开发者更容易理解数据的预期类型，并且能够利用静态类型检查工具 (如 MyPy) 在运行前发现潜在的类型错误。
+确保类型提示与 Docstring 中对类型和形状的描述保持一致。
+示例 类型提示:
+
+Python
+
+from typing import List, Dict, Any
+
+def process_items(items: List[Dict[str, Any]]) -> int:
+    """Processes a list of items.
+
+    Args:
+        items: A list of dictionaries, where each dictionary represents an item.
+
+    Returns:
+        The total count of processed items.
+    """
+    count = 0
+    for item in items:
+        # Process each item...
+        count += 1
+    return count
+
+user_data: Dict[str, str] = {"name": "Alice", "email": "alice@example.com"}
+8. 编程建议 (Programming Recommendations)
+
+避免使用可变对象作为默认参数: 函数默认参数在函数定义时只创建一次。如果默认参数是可变对象（如列表或字典），多次调用函数且不传入该参数时，会共享同一个对象，导致意外行为。应使用 None 作为默认值，并在函数内部进行检查和初始化。
+Python
+
+# 避免
+# def process_list(items=[]): pass
+
+# 推荐
+def process_list(items=None):
+    if items is None:
+        items = []
+    # ... process items ...
+使用 is None: 检查变量是否为 None 时，使用 is None 或 is not None，而不是 == None 或 != None。
+使用上下文管理器 (Context Managers): 对于需要确保资源被正确获取和释放的场景（如文件操作、锁），使用 with 语句（上下文管理器）而不是手动的 try...finally 块。
+Python
+
+# 推荐
+with open('file.txt', 'r') as f:
+    content = f.read()
+# 文件会自动关闭
+
+# 避免手动关闭
+# f = open('file.txt', 'r')
+# try:
+#     content = f.read()
+# finally:
+#     f.close()
+列表/字典/集合推导式 (Comprehensions): 优先使用列表、字典、集合推导式来创建新的列表、字典或集合，它们通常更简洁易读且高效。
+迭代 (Iteration): 使用循环直接迭代序列或集合，而不是手动使用索引。使用 enumerate() 同时迭代索引和值。
+异常处理 (Exception Handling):
+捕获异常时，应捕获特定的异常类型，而不是裸露的 except:。避免捕获 BaseException 或 Exception，除非确实需要捕获所有类型的错误并进行通用处理（通常需要重新抛出异常）。
+不要使用空的 except: pass 块，除非你非常清楚自己在做什么，并且有充分的理由忽略错误。
+函数参数: 尽量使用关键字参数和位置参数混合使用，提高函数调用的可读性。使用 *args 和 **kwargs 收集不定数量的参数。
+9. 自动化工具
+
+Cursor 项目强烈推荐并要求在 Python 开发中使用自动化工具来强制执行风格规范：
+
+代码格式化工具 (Formatters): 推荐使用 Black。Black 是一个不妥协的格式化工具，它几乎没有配置项，能够确保所有 Python 代码风格完全一致。或者使用 autopep8, YAPF 等工具。配置并在保存时自动运行或使用 pre-commit hook。
+代码风格检查工具 (Linters): 推荐使用 Flake8 和 Pylint。Flake8 集成了 PyFlakes, pycodestyle (PEP 8 检查) 和 McCabe (复杂度检查)。Pylint 提供更全面的代码质量和风格检查。配置这些工具，并在提交前或 CI 中运行检查。
+类型检查工具 (Type Checkers): 推荐使用 MyPy。用于静态检查代码中的类型错误，配合类型提示使用。配置并在提交前或 CI 中运行检查。
+pre-commit: 使用 pre-commit 框架来管理和运行上述工具的 pre-commit hook，确保只有通过风格检查和类型检查的代码才能被提交。
+10. 与通用规范的关系
+
+本 Python 编码风格规范是对 Cursor 项目通用编码风格规范的具体化和补充。开发者在编写 Python 代码时，应首先确保符合本 Python 规范的要求，同时也要遵守项目通用的关于命名、注释、Git 提交等方面的原则和规范。
+
+11. 总结
+
+遵循本 Python 编码风格规范，利用自动化工具，我们将构建一套高质量、易于理解、易于维护的 Python 代码库，从而提高 Cursor 项目后端的开发效率和稳定性。请所有贡献者认真阅读并遵守本规范。

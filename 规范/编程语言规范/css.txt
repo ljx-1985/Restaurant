@@ -1,0 +1,159 @@
+Cursor 项目 CSS 编码风格规范
+
+1. 引言
+
+CSS 是 Cursor 项目前端界面的表现层语言。编写高质量的 CSS 代码对于保障页面的视觉一致性、可维护性、可伸缩性、性能和可读性至关重要。随着项目规模的增长，如果没有明确的规范，CSS 很容易变得混乱和难以管理。本规范旨在为 Cursor 项目的 CSS 编写提供详细的指导原则和要求。
+
+本规范是对 Cursor 项目通用编码风格规范和通用前端开发规范的补充。通用规范中的原则（如一致性、可读性、意图明确、使用自动化工具等）以及前端规范中的总体原则（如组件化、模块化、代码分离、性能、可访问性、响应式）同样适用于 CSS 代码。
+
+2. 通用原则 (CSS 重点)
+
+一致性 (Consistency): 在整个项目的所有 CSS 文件中严格保持本规范规定的风格一致性。
+模块化 (Modularity): 将 CSS 视为独立的模块，减少样式之间的相互影响，避免全局污染。
+可伸缩性 (Scalability): 采用一种能够随着项目增长而轻松扩展的架构和命名约定。
+可预测性 (Predictability): 样式的应用和覆盖应易于预测，避免复杂和脆弱的选择器。
+性能 (Performance): 关注 CSS 对页面加载和渲染性能的影响。
+特定性管理 (Specificity Management): 理解并有效管理 CSS 的特定性，避免使用高特定性的选择器导致样式难以覆盖。
+3. CSS 方法论 (Methodology)
+
+为了实现模块化和可伸缩性，Cursor 项目强制采用 BEM (Block-Element-Modifier) 作为主要的 CSS 命名方法论和组织思想，特别是在组件级别的样式中。
+
+BEM 核心思想: 将 UI 拆分为独立的块 (Blocks)、块内的元素 (Elements) 和块或元素的不同状态/变体 (Modifiers)。
+块 (Block): 独立的、可重用的 UI 组件块。其名称应描述其用途（名词）。类名使用小写字母和连字符连接单词。例如：.button, .card, .user-avatar。
+元素 (Element): 块的组成部分，不能独立于块而存在。使用双下划线 __ 连接块名和元素名。例如：.card__title, .user-avatar__image, .button__icon。
+修饰符 (Modifier): 块或元素的变体或状态。使用双连字符 -- 连接块名或元素名和修饰符名。例如：.button--primary, .card--disabled, .user-avatar__image--large。
+优点: BEM 命名清晰，可读性高，降低了特定性（都是单类选择器），避免了命名冲突，提高了样式在组件之间的可重用性。
+应用: 在编写组件相关的 CSS 时，必须严格遵循 BEM 命名。对于基础样式（如重置、排版、工具类）或布局样式，可以结合其他方法论（如 SMACSS 的分类思想），但命名仍尽量保持一致性和描述性。
+4. 代码格式化 (Code Formatting)
+
+这些规则通常可以通过自动化工具（如 Prettier, Stylelint）强制执行。
+
+缩进 (Indentation): 使用与项目通用缩进规则和前端 JavaScript/TypeScript 规范一致的缩进方式（例如，统一使用 2 个空格）。
+声明块格式:
+选择器后空一格，然后是花括号 {。
+每个属性声明（属性-值对）独占一行，以分号 ; 结束。
+属性名和值之间用冒号 : 分隔，冒号后有一个空格。
+花括号 } 独占一行，与选择器左对齐。 <!-- end list -->
+CSS
+
+/* 推荐 */
+.block {
+    property-one: value;
+    property-two: value;
+}
+
+/* 避免 */
+/*
+.block{property-one:value; property-two:value;}
+.block { property-one: value; property-two: value; }
+*/
+规则集之间空行: 不同规则集之间空一行，提高可读性。
+选择器分组: 当多个选择器共享同一组属性时，将它们写在不同的行上，每个选择器独占一行。
+CSS
+
+/* 推荐 */
+.selector-one,
+.selector-two,
+.selector-three {
+    /* properties */
+}
+
+/* 避免 */
+/* .selector-one, .selector-two, .selector-three { ... } */
+引号: URL 字符串和属性选择器中的属性值必须使用双引号 " 包围。
+CSS
+
+background-image: url("path/to/image.png");
+[data-attribute="value"] { /* ... */ }
+5. 命名约定 (Naming Conventions)
+
+类名: 强制遵循 BEM 命名规范。类名使用小写字母，单词之间用连字符 - 分隔，元素和修饰符使用 __ 和 -- 连接。
+示例：.search-form, .search-form__input, .search-form__button--disabled。
+ID 选择器: 禁止在 CSS 中使用 ID 选择器（如 #my-id {...}）。ID 具有非常高的特定性，难以覆盖，破坏了样式的可伸缩性。ID 仅用于 HTML 内部锚点、JS 行为绑定或作为 <label> 的 for 目标。
+避免通用标签选择器: 除非是全局的重置或基础样式，否则应避免直接使用 HTML 标签作为选择器（如 div { ... }, p { ... }）。优先使用类选择器。
+6. 选择器 (Selectors)
+
+保持简洁: 选择器链不应过长或过于复杂。通常建议选择器深度不超过 3-4 层。简洁的选择器执行效率更高，且特定性更低，易于覆盖。
+避免过度特定性: 避免创建特定性高的选择器链（如 div#container .sidebar ul li a {...}）。高特定性样式难以被低特定性样式覆盖，使得修改和维护变得困难。BEM 方法论有助于降低特定性，因为它主要使用单类选择器。
+谨慎使用后代选择器: 避免无限制的后代选择器（如 .parent .child {...}）。在 BEM 中，元素类名已经包含了块名，可以直接 .block__element {...}，这样更明确且特定性更低。
+CSS 嵌套 (如果使用预处理器): 谨慎使用嵌套。嵌套层级不应过深。只嵌套直接相关的子元素或修饰符。过度嵌套会导致生成高特定性的选择器。
+7. 属性声明 (Property Declarations)
+
+声明顺序: 推荐按字母顺序排序属性，或者按逻辑分组排序（例如，布局相关、盒模型、视觉效果、排版、杂项）。选择一种并在项目内保持一致。使用自动化工具进行属性排序更佳。
+CSS
+
+/* 推荐 (字母排序) */
+.element {
+    color: red;
+    display: flex;
+    margin-bottom: 10px;
+    padding: 5px;
+}
+厂商前缀 (Vendor Prefixes): 必须使用 Autoprefixer 等后处理器工具自动添加厂商前缀（如 -webkit-, -moz-），禁止手动添加。
+简写属性 (Shorthand Properties): 尽可能使用简写属性（如 margin, padding, background, font, border），但要确保你理解简写属性会设置其所有子属性，避免意外覆盖。
+8. 值与单位 (Values and Units)
+
+颜色: 使用标准的颜色表示法（Hex, RGB, RGBA, HSL, HSLA）。将常用的颜色定义为 CSS 变量。
+单位:
+布局和组件尺寸: 优先使用相对单位（rem, em, %, vw, vh），特别是涉及字体大小或需要响应式缩放的场景。rem 相对于根元素的字体大小，适合控制元素尺寸和间距以实现更好的可访问性。em 相对于父元素的字体大小，适合文本相关的缩进和间距。
+边框、小间距等: 对于不随字体大小变化的固定小尺寸，可以使用 px。
+数值: 对于值为 0 的长度或百分比，不需要单位（margin: 0; 而不是 margin: 0px;）。
+9. CSS 变量 (CSS Variables - Custom Properties)
+
+推荐使用 CSS 变量: 使用 CSS 自定义属性（--*）来存储常用的值，如颜色、字体、字号、间距、断点等。这有助于实现主题切换、提高一致性和管理效率。
+CSS
+
+:root {
+    --color-primary: #007bff;
+    --spacing-md: 16px;
+}
+
+.button--primary {
+    background-color: var(--color-primary);
+    padding: var(--spacing-md);
+}
+10. !important 使用
+
+禁止使用 !important：在绝大多数情况下，都可以通过更好的特定性管理、重构选择器或调整样式顺序来避免使用 !important。它破坏了 CSS 的层叠规则，使得样式难以覆盖和维护。
+极少数例外: 在确实需要覆盖第三方库的强制样式，或者定义一些必须应用的辅助类（如 .hidden !important）时，可以在极少数、有充分理由且文档化的情况下使用 !important。
+11. 预处理器/后处理器 (Pre/Post-processors)
+
+如果项目使用 CSS 预处理器（如 Sass, Less）或后处理器（如 PostCSS），应遵循以下原则：
+
+变量: 使用预处理器变量或 CSS 变量管理常用值。
+混合 (Mixins): 对于重复的代码块或需要参数化的样式片段，使用 Mixins 提高代码复用性。
+嵌套 (Nesting): 谨慎使用嵌套，层级不应过深，避免生成高特定性的选择器。只嵌套直接相关的子元素或修饰符。
+Autoprefixer: 强制使用 Autoprefixer 后处理器自动添加厂商前缀。
+Minification: 在生产环境中，强制使用 CSS 压缩工具（如 cssnano）减小文件大小。
+12. 注释 (Comments)
+
+使用标准的 CSS 注释格式：/* ... */。
+注释应简洁明了，用于：
+标记不同的样式区域（例如，/* Base Styles */, /* Components */, /* Layout */, /* Pages */）。
+解释复杂或非显而易见的样式规则。
+解释特定的 Workaround 或浏览器兼容性处理。
+标记组件的开始和结束（如果文件包含多个组件样式）。
+遵循项目通用注释规范。
+13. 文件组织 (File Organization)
+
+按照前端通用规范的要求，结合 CSS 方法论，组织 CSS 文件结构。
+常见方式包括按类型组织（base/, components/, layout/, pages/）或按功能/组件组织。
+如果采用组件化的 JavaScript/TypeScript 框架，考虑将组件相关的样式文件与组件代码放在一起。
+14. 性能考虑 (Performance Considerations)
+
+选择器效率: 编写高效的 CSS 选择器（虽然现代浏览器引擎已很大程度上优化了选择器匹配）。
+文件大小: 压缩 (Minify) 和 Gzip 压缩 CSS 文件。
+关键 CSS (Critical CSS): 对于首屏内容，考虑提取和内联必要的 CSS，加速首屏渲染。
+渲染性能: 理解哪些 CSS 属性会触发回流 (Reflow) 和重绘 (Repaint)，尽量减少不必要的布局计算。动画优先使用 transform 和 opacity 属性，它们通常只触发合成。
+15. 与 HTML 的关系 (Relationship with HTML)
+
+CSS 依赖 HTML 的结构和类名来应用样式。
+编写 CSS 时，应考虑到它将应用于的 HTML 结构。尽量编写与 HTML 结构解耦、依赖稳定类名的样式，避免编写依赖于深层、脆弱 HTML 结构的样式。遵循 BEM 有助于实现这一点。
+16. 自动化工具 (Automation Tools)
+
+Cursor 项目强烈推荐并要求在 CSS 开发中使用自动化工具：
+
+代码格式化工具 (Formatter): 推荐使用 Prettier。配置并集成到开发工作流程中。
+代码风格和代码质量检查工具 (Linter): 推荐使用 Stylelint。配置 Stylelint（可以结合 Stylelint-config-standard, Stylelint-config-recommended-scss 等配置），用于检查 CSS 语法错误、风格问题和潜在的代码问题。
+后处理器 (Post-processors): 强制使用 PostCSS，并配置 Autoprefixer 自动添加厂商前缀。可以配置 cssnano 进行 CSS 压缩。
+pre-commit: 使用 pre-commit 框架集成 Prettier, Stylelint, PostCSS 等工具，在代码提交前自动检查和修复代码问题。

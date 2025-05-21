@@ -1,0 +1,104 @@
+Cursor 项目 React 框架规范
+
+1. 引言
+
+React 是 Cursor 项目前端界面的核心构建库。为了确保项目前端应用的可维护性、可伸缩性、性能和开发效率，我们需要一套标准化的 React 框架使用规范。本规范定义了在 Cursor 项目中使用 React 时应遵循的架构模式、推荐的核心库和标准实践。
+
+本规范是对 Cursor 项目其他相关规范的补充，特别是通用前端开发规范和 React 编码风格规范。它侧重于如何组织 React 应用的各个方面（如状态、路由、数据获取），而 React 编码风格规范侧重于如何编写单个组件的代码。
+
+2. 核心技术栈选择
+
+Cursor 项目前端基于 React 构建，并采用以下核心技术栈：
+
+React 版本: 使用 React 的稳定版本（例如，React 18+）。
+语言: 强制使用 TypeScript 进行开发。这提供了强大的类型检查，提高了代码的可靠性和可维护性。
+项目构建工具: 推荐使用 Vite 进行开发和构建。Vite 提供了快速的开发服务器和优化的生产构建能力。或者使用其他现代构建工具（如 Create React App, Next.js），具体选择应在项目初始化时确定并统一。
+包管理器: 遵循项目通用的包管理器选择（例如，npm, yarn, pnpm）。
+3. 组件架构
+
+遵循通用前端开发规范中的组件化思想，并可以结合以下模式：
+
+功能组件与容器组件 (Presentational vs. Container Components): （可选模式）
+功能组件 (Presentational Components): 负责 UI 的外观展示，通过 props 接收数据和回调函数，不包含业务逻辑或状态管理（除非是简单的 UI 状态）。它们通常是无状态的函数组件。
+容器组件 (Container Components): 负责业务逻辑、数据获取、状态管理、以及将数据和回调作为 props 传递给功能组件。它们通常是函数组件并使用 Hooks。
+目的: 分离关注点，提高组件的复用性和可测试性。
+组件组织: 遵循通用前端开发规范中关于文件组织的约定，通常按功能或按组件组织文件。
+Hooks 优先: 优先使用函数组件和 React Hooks 来编写组件逻辑。
+4. 状态管理 (State Management)
+
+Cursor 项目采用分层的状态管理策略：
+
+组件本地状态: 对于仅组件内部使用的简单状态，使用 useState。对于组件内部逻辑较复杂的状态管理，使用 useReducer。
+Props 传递: 对于父子组件之间的数据传递，使用 props。避免 Prop Drilling（通过多层组件手动传递 Props）。
+跨组件/组件树状态 (Context API): 对于需要在组件树中向下传递，避免 Props Drilling 的数据，推荐使用 React 的 Context API 配合 useContext Hook。这适用于中等程度的状态共享。
+全局/共享客户端状态: 对于需要在应用中广泛共享的客户端状态（不涉及服务器数据），推荐使用 Zustand。Zustand 是一个轻量级、易于使用且基于 Hook 的状态管理库。对于逻辑非常复杂或需要严格的可追溯性（如时间旅行调试）的场景，可以考虑引入更重量级的库（如 Redux Toolkit + Redux Thunk/Saga），但这需要经过团队评估并统一决定。
+服务器状态 (Server State): 强制使用 React Query 来管理从后端 API 获取的服务器数据。React Query 提供了强大的数据缓存、后台更新、加载/错误状态管理、数据同步等功能，极大地简化了数据获取逻辑并优化了性能。
+状态管理选择优先级 (从简单到复杂):
+
+useState / useReducer (组件内部状态)
+Context API + useContext (中等跨层级状态传递)
+Zustand (简单的全局客户端状态)
+React Query (服务器状态管理 - 强制使用)
+(评估后) 更复杂的库 (如 Redux Toolkit) (极少数复杂场景)
+5. 路由管理 (Routing)
+
+路由库: 强制使用 React Router v6+ 进行客户端路由管理。
+路由定义: 使用声明式路由 (<Routes>, <Route>) 定义应用的不同页面和路径。
+导航: 使用 useNavigate Hook 或 <Link> 组件进行页面导航。
+嵌套路由: 合理使用嵌套路由来组织应用的层级结构。
+6. 数据获取 (Data Fetching)
+
+核心库: 强制使用 React Query 进行所有与后端 API 交互的数据获取、更新和缓存管理。
+数据获取逻辑位置:
+使用 React Query 提供的 Hook（如 useQuery, useMutation）在需要数据的组件或自定义 Hook 中触发数据获取。
+可以抽象出自定义 Hook 来封装特定的数据获取逻辑（例如 useUserProfile(userId)）。
+API 通信层: 可以在 React Query 的查询函数内部，或在独立的 API 服务模块中，使用标准的 Workspace API 或 Axios 库来发送 HTTP 请求。将认证信息、统一错误处理、请求拦截等逻辑封装在此层。
+数据格式: 后端 API 通常返回 JSON 格式数据。前端应确保正确处理 JSON 数据的解析和类型转换（配合 TypeScript）。
+7. 样式解决方案 (Styling Solution)
+
+主要方法: 推荐使用 CSS Modules 配合 Sass 预处理器。
+CSS Modules: 提供了组件级别的样式隔离，避免了全局命名冲突。
+Sass: 提供了变量、混合、嵌套等功能，提高了 CSS 的编写效率和可维护性。
+命名规范: 遵循 Cursor 项目 CSS 编码风格规范中的 BEM 命名方法论。在 CSS Modules 中，类名通常会自动哈希化，但开发者在源文件中仍应使用 BEM 命名。
+CSS 变量: 积极使用 CSS 变量 (--*) 进行主题管理、存储全局颜色、字体、间距等常用值。
+避免内联样式: 避免在 JSX 中使用大量的内联样式 style={{ ... }}。
+8. 表单管理 (Form Management)
+
+表单库: 推荐使用 React Hook Form 进行复杂的表单管理和验证。它提供了高性能、易于使用且与 Hooks 集成良好的 API。对于非常简单的表单，可以直接使用组件状态管理。
+表单验证: 利用 React Hook Form 集成的验证能力或配合验证库（如 Yup, Zod）进行表单验证。验证逻辑应清晰、用户友好。
+9. 测试库与策略
+
+遵循 Cursor 项目通用系统化测试规范：
+
+组件测试: 强制使用 Jest 作为测试运行器和断言库，配合 React Testing Library (RTL) 进行组件测试。RTL 更侧重于模拟用户行为和测试组件的最终输出，而不是组件内部实现细节（相比 Enzyme）。
+E2E 测试: 遵循通用测试规范，使用 Cypress 或 Playwright 等工具进行端到端测试。
+10. 性能优化模式
+
+代码分割与懒加载: 使用 React.lazy 和 Suspense 以及路由级别的代码分割来延迟加载非首屏组件或代码，优化初始加载性能。
+Memoization: 使用 React.memo 包裹功能组件，使用 useMemo 缓存计算结果，使用 useCallback 缓存函数实例，以减少不必要的组件重新渲染（仅在通过 Profiler 确定存在性能瓶颈时才进行，避免过度优化）。
+虚拟化/窗口化: 对于长列表，使用 react-window 或 react-virtualized 等库进行列表虚拟化，只渲染当前视口可见的列表项，优化渲染性能。
+React Developer Tools Profiler: 利用 React DevTools 的 Profiler 功能分析组件的渲染性能，识别优化点。
+11. 错误处理
+
+错误边界 (Error Boundaries): 使用类组件实现错误边界来捕获子组件树中渲染阶段的 JavaScript 错误，防止整个应用崩溃，并显示备用 UI。
+API 错误处理: 利用 React Query 的错误处理机制或在数据获取 Hook 内部统一处理 API 请求失败的情况，向用户提供友好的反馈。
+12. TypeScript 使用
+
+强制全程使用 TypeScript。
+
+为所有组件的 Props 和 State 定义明确的类型。
+为 Hooks（包括自定义 Hooks）的参数和返回值定义类型。
+为 API 请求和响应数据定义类型。
+启用并遵守 tsconfig.json 中的严格模式选项。
+13. 开发工具与辅助
+
+ESLint: 配置 ESLint，并启用 eslint-plugin-react, eslint-plugin-react-hooks, eslint-plugin-jsx-a11y, @typescript-eslint/eslint-plugin 等插件。
+Prettier: 配置 Prettier 自动格式化 JSX/TSX 文件，并与 ESLint 协同工作。
+React Developer Tools: 浏览器扩展，用于检查组件树、Props、State、Hooks、Profiler 等，是 React 开发必备工具。
+14. 弃用与升级
+
+当 React 或依赖库的某个特性被标记为弃用时，应关注并计划迁移到推荐的替代方案。
+定期更新 React 及其生态系统的库，关注版本更新说明和潜在的不兼容变更。
+15. 与通用规范的关系
+
+本 React 框架规范是 Cursor 项目通用编码风格、通用前端开发等规范的具体实践指南。它定义了在 React 环境下，如何应用和扩展上层规范的要求。

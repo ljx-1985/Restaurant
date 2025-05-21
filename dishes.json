@@ -1,0 +1,742 @@
+[
+  {
+    "id": "D001",
+    "name": "炝炒时蔬",
+    "category": "素菜",
+    "description": "多种新鲜蔬菜清炒，口感清爽。(估算：40-80kcal/100g，视蔬菜种类而定) 营养标签（以小白菜为例）：蛋白质1.5g 脂肪0.5g 碳水3g 钠50mg | 青少年营养特点: 鸡蛋提供优质蛋白和钙质，绿叶蔬菜也含有少量钙。提供丰富的维生素、矿物质和膳食纤维。 | 孕产妇营养特点: 选择富含叶酸的绿叶蔬菜如菠菜、油麦菜，自身含有少量铁，烹饪时可使用碘盐。各阶段都适宜，提供维生素和膳食纤维，能量较低，需搭配其他食物。",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [],
+    "population_tags_readable": [
+    ],
+    "disease_suitable_code": 127,
+    "disease_suitable_readable": [
+      "糖尿病适宜",
+      "高血压适宜",
+      "痛风适宜",
+      "高血脂适宜",
+      "青少年适宜",
+      "孕产妇适宜",
+      "老年适宜"
+    ]
+  },
+  {
+    "id": "D002",
+    "name": "毛氏红烧肉",
+    "category": "荤菜",
+    "description": "肥瘦相间的五花肉，经慢火炖煮，色泽红亮，口味浓郁。",
+    "disease_blacklist_code": 9,
+    "allergen_mask_code": 1,
+    "disease_tags_readable": [
+      "糖尿病不适宜",
+      "高血脂不适宜"
+    ],
+    "population_tags_readable": [
+    ],
+    "disease_suitable_code": 0,
+    "disease_suitable_readable": []
+  },
+  {
+    "id": "D003",
+    "name": "海鲜豆腐羹", 
+    "category": "荤菜",
+    "description": "鲜嫩豆腐与多种海鲜熬制，汤汁鲜美。",
+    "disease_blacklist_code": 4,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [
+      "痛风不适宜"
+    ],
+    "population_tags_readable": [
+    ],
+    "disease_suitable_code": 0,
+    "disease_suitable_readable": []
+  },
+  {
+    "id": "D006",
+    "name": "牛奶燕麦片",
+    "category": "汤",
+    "description": "健康早餐选择，牛奶煮燕麦。",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [],
+    "population_tags_readable": [
+    ],
+    "disease_suitable_code": 0,
+    "disease_suitable_readable": []
+  },
+  {
+    "id": "D007",
+    "name": "避风塘炒虾",
+    "category": "荤菜",
+    "description": "香辣酥脆的经典港式炒虾。",
+    "disease_blacklist_code": 6,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [
+      "高血压不适宜",
+      "痛风不适宜"
+    ],
+    "population_tags_readable": [
+    ],
+    "disease_suitable_code": 0,
+    "disease_suitable_readable": []
+  },
+  {
+    "id": "D008",
+    "name": "宫保鸡丁",
+    "category": "荤菜",
+    "description": "鸡丁、花生、干辣椒等炒制，酸甜微辣。",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [],
+    "population_tags_readable": [
+    ],
+    "disease_suitable_code": 0,
+    "disease_suitable_readable": []
+  },
+  {
+    "id": "D009",
+    "name": "蒜蓉西兰花",
+    "category": "素菜",
+    "description": "蒜香浓郁的清炒西兰花。(估算：55kcal/100g) 营养标签：蛋白质3g 脂肪3g 碳水4g 钠70mg | 高血脂人群适宜: 纯蔬菜，不含反式脂肪和胆固醇。使用少量植物油炒制。能量较低，富含膳食纤维。营养标签 (每100g): 蛋白质 2.5g，脂肪 0.4g，碳水 6g，反式脂肪 0g，胆固醇 0mg",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [],
+    "population_tags_readable": [
+      "无已知主要过敏原"
+    ],
+    "disease_suitable_code": 75,
+    "disease_suitable_readable": [
+      "糖尿病适宜",
+      "高血压适宜",
+      "高血脂适宜",
+      "老年适宜"
+    ]
+  },
+  {
+    "id": "D010",
+    "name": "清蒸多宝鱼",
+    "category": "荤菜",
+    "description": "鲜活鱼清蒸，保留原汁原味。(估算：120kcal/100g) 营养标签：蛋白质20g 脂肪3g 碳水0g 钠80mg",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [],
+    "population_tags_readable": [
+    ],
+    "disease_suitable_code": 75,
+    "disease_suitable_readable": [
+      "糖尿病适宜",
+      "高血压适宜",
+      "高血脂适宜",
+      "老年适宜"
+    ]
+  },
+  {
+    "id": "D011",
+    "name": "杂蔬沙拉",
+    "category": "素菜",
+    "description": "多种生菜、番茄、黄瓜等混合，配以橄榄油。",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [],
+    "population_tags_readable": [
+      "无已知主要过敏原"
+    ],
+    "disease_suitable_code": 0,
+    "disease_suitable_readable": []
+  },
+  {
+    "id": "D012",
+    "name": "白灼菜心",
+    "category": "素菜",
+    "description": "广东名菜，菜心焯水后淋上酱油。(估算：60-100kcal/100g，视蔬菜种类而定) 营养标签（以芥兰为例）：蛋白质2g 脂肪4g 碳水3g 钠150mg",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [],
+    "population_tags_readable": [
+    ],
+    "disease_suitable_code": 15,
+    "disease_suitable_readable": [
+      "糖尿病适宜",
+      "高血压适宜",
+      "痛风适宜",
+      "高血脂适宜"
+    ]
+  },
+  {
+    "id": "D013",
+    "name": "芹菜炒肉丝",
+    "category": "荤菜",
+    "description": "芹菜的清香与肉丝的鲜嫩结合。 | 高血压人群适宜 (芹菜炒牛肉丝 (少油减盐版)): 减少腌制牛肉和炒菜时的盐用量，芹菜富含钾。芹菜含有一定的钙和镁。选择瘦牛肉，快速滑炒，减少用油量。营养标签 (每100g): 蛋白质 12g，脂肪 4g，碳水 3g，钠 18mg",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 4,
+    "disease_tags_readable": [],
+    "population_tags_readable": [
+    ],
+    "disease_suitable_code": 2,
+    "disease_suitable_readable": [
+      "高血压适宜"
+    ]
+  },
+  {
+    "id": "D014",
+    "name": "冬瓜丸子汤",
+    "category": "汤",
+    "description": "清淡可口的冬瓜搭配手工肉丸。",
+    "disease_blacklist_code": 4,
+    "allergen_mask_code": 1,
+    "disease_tags_readable": [
+      "痛风不适宜"
+    ],
+    "population_tags_readable": [
+    ],
+    "disease_suitable_code": 0,
+    "disease_suitable_readable": []
+  },
+  {
+    "id": "D015",
+    "name": "拍黄瓜",
+    "category": "素菜",
+    "description": "清爽开胃的凉拌黄瓜。(估算：15kcal/100g) 营养标签：蛋白质0.7g 脂肪0.1g 碳水2.9g 钠5mg",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [],
+    "population_tags_readable": [
+    ],
+    "disease_suitable_code": 15,
+    "disease_suitable_readable": [
+      "糖尿病适宜",
+      "高血压适宜",
+      "痛风适宜",
+      "高血脂适宜"
+    ]
+  },
+  {
+    "id": "D016",
+    "name": "蒜泥白肉",
+    "category": "荤菜",
+    "description": "蒜泥白肉 (估算：250kcal/100g) 营养标签：蛋白质18g 脂肪18g 碳水2g 钠600mg",
+    "disease_blacklist_code": 1,
+    "allergen_mask_code": 1,
+    "disease_tags_readable": [
+      "糖尿病不适宜"
+    ],
+    "population_tags_readable": [     
+    ],
+    "disease_suitable_code": 1,
+    "disease_suitable_readable": [
+      "糖尿病适宜"
+    ]
+  },
+  {
+    "id": "D017",
+    "name": "鸡丝魔芋豆腐",
+    "category": "荤菜",
+    "description": "鸡丝魔芋豆腐 (估算：120kcal/100g) 营养标签：蛋白质10g 脂肪6g 碳水4g 钠300mg",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [],
+    "population_tags_readable": [     
+    ],
+    "disease_suitable_code": 1,
+    "disease_suitable_readable": [
+      "糖尿病适宜"
+    ]
+  },
+  {
+    "id": "D018",
+    "name": "虫草花烧鸡",
+    "category": "荤菜",
+    "description": "虫草花炖鸡汤 (估算：80kcal/100ml) 营养标签：蛋白质8g 脂肪4g 碳水1g 钠100mg",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [],
+    "population_tags_readable": [     
+    ],
+    "disease_suitable_code": 1,
+    "disease_suitable_readable": [
+      "糖尿病适宜"
+    ]
+  },
+  {
+    "id": "D019",
+    "name": "瑶柱浸时蔬",
+    "category": "荤菜",
+    "description": "瑶柱浸时蔬 (估算：80-120kcal/100g，视蔬菜种类而定) 营养标签（以娃娃菜为例）：蛋白质3g 脂肪6g 碳水4g 钠200mg",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [],
+    "population_tags_readable": [     
+    ],
+    "disease_suitable_code": 0,
+    "disease_suitable_readable": []
+  },
+  {
+    "id": "D020",
+    "name": "瘦肉枸杞西洋菜汤",
+    "category": "汤",
+    "description": "瘦肉枸杞西洋菜汤 (估算：60kcal/100ml) 营养标签：蛋白质6g 脂肪3g 碳水1g 钠80mg",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 1,
+    "disease_tags_readable": [],
+    "population_tags_readable": [     
+    ],
+    "disease_suitable_code": 1,
+    "disease_suitable_readable": [
+      "糖尿病适宜"
+    ]
+  },
+  {
+    "id": "D021",
+    "name": "番茄烩豆腐", 
+    "category": "素菜",
+    "description": "高血压人群适宜: 番茄的酸味可以减少盐的使用，豆腐本身钠含量低且富含钾。豆腐是钙和镁的良好来源。使用少量植物油煸炒，避免油炸。营养标签 (每100g): 蛋白质 4g，脂肪 2g，碳水 5g，钠 10mg | 孕产妇营养特点: 番茄含有少量叶酸，豆腐含有植物铁，烹饪时可使用碘盐。清淡易消化，适合孕早期；孕中晚期可搭配主食以增加能量。",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [],
+    "population_tags_readable": [     
+    ],
+    "disease_suitable_code": 34,
+    "disease_suitable_readable": [
+      "高血压适宜",
+      "孕产妇适宜"
+    ]
+  },
+  {
+    "id": "D022",
+    "name": "蒜蓉蒸娃娃菜",
+    "category": "素菜",
+    "description": "高血压人群适宜 (粤菜): 娃娃菜钠含量低，蒜蓉的香味可以减少盐的用量。娃娃菜也含有一定的钾。娃娃菜含有少量钙和镁。蒸制方式不使用额外油脂。营养标签 (每100g): 蛋白质 1.2g，脂肪 0.1g，碳水 3.5g，钠 12mg (估算：20kcal/100g)",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [],
+    "population_tags_readable": [     
+    ],
+    "disease_suitable_code": 2,
+    "disease_suitable_readable": [
+      "高血压适宜"
+    ]
+  },
+  {
+    "id": "D023",
+    "name": "清炖鲫鱼汤",
+    "category": "汤",
+    "description": "高血压人群适宜 (粤菜): 炖汤时少放盐，利用鱼本身的鲜味。鲫鱼含有一定的钾。鱼骨中含有钙质，长时间炖煮有助于钙的溶出。撇去汤表面的浮油，选择脂肪含量相对较低的鲫鱼。营养标签 (每100ml): 蛋白质 6g，脂肪 3g，碳水 0.5g，钠 25mg (估算：60kcal/100ml)",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [],
+    "population_tags_readable": [     
+    ],
+    "disease_suitable_code": 2,
+    "disease_suitable_readable": [
+      "高血压适宜"
+    ]
+  },
+  {
+    "id": "D024",
+    "name": "香菇滑鸡",
+    "category": "荤菜",
+    "description": "高血压人群适宜 (粤菜): 减少腌制鸡肉时的盐和酱油用量，利用香菇的鲜味提鲜。鸡肉含有少量钾。香菇含有一定的镁。去皮烹饪，减少用油量，可以使用蒸或滑炒的方式。营养标签 (每100g): 蛋白质 10g，脂肪 3g，碳水 2g，钠 20mg (估算：80kcal/100g)",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [],
+    "population_tags_readable": [     
+    ],
+    "disease_suitable_code": 26,
+    "disease_suitable_readable": [
+      "高血压适宜",
+      "高血脂适宜",
+      "青少年适宜"
+    ]
+  },
+  {
+    "id": "D025",
+    "name": "清蒸鳕鱼",
+    "category": "荤菜",
+    "description": "高血脂人群适宜: 鳕鱼本身不含反式脂肪，胆固醇含量相对较低。清蒸方式避免额外引入反式脂肪。鳕鱼富含Omega-3不饱和脂肪酸，有助于降低甘油三酯，改善血脂构成。鳕鱼脂肪含量较低，清蒸不增加额外能量。营养标签 (每100g): 蛋白质 18g，脂肪 2g，碳水 0g，反式脂肪 0g，胆固醇 50mg | 老年人营养特点 (清蒸鳕鱼佐嫩豆腐): 鳕鱼和豆腐的蛋白质均为优质蛋白，易于消化吸收。鳕鱼富含维生素D，有助于钙吸收；豆腐是钙的良好来源，两者结合有助于预防骨质疏松和肌少症。清蒸方式少油少盐，搭配少量粗粮作为主食，控制精细碳水摄入。营养标签 (100g): 蛋白质 17g，脂肪 2g，碳水 1g，钙 100mg，钠 30mg | 孕产妇营养特点 (清蒸鳕鱼佐时蔬): 鳕鱼富含优质蛋白，搭配富含叶酸的绿叶蔬菜（如小油菜），并可选用含碘丰富的海鱼。鳕鱼易消化，适合各阶段；孕中晚期可增加鱼肉份量以满足蛋白质需求。营养标签 (100g): 蛋白质 18g，脂肪 2g，碳水 1g，叶酸 30µg，铁 0.8mg，碘 60µg",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [],
+    "population_tags_readable": [     
+    ],
+    "disease_suitable_code": 104,
+    "disease_suitable_readable": [
+      "高血脂适宜",
+      "孕产妇适宜",
+      "老年适宜"
+    ]
+  },
+  {
+    "id": "D026",
+    "name": "凉拌苦瓜",
+    "category": "素菜",
+    "description": "高血脂人群适宜: 苦瓜富含膳食纤维和维生素C，有助于降低血脂。凉拌方式清淡少油。苦瓜能量极低，适合控制总能量摄入。营养标签 (每100g): 蛋白质 0.8g，脂肪 0.1g，碳水 3.5g，反式脂肪 0g，胆固醇 0mg",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [],
+    "population_tags_readable": [          
+    ],
+    "disease_suitable_code": 8,
+    "disease_suitable_readable": [
+      "高血脂适宜"
+    ]
+  },
+  {
+    "id": "D028",
+    "name": "烤鸡胸肉沙拉",
+    "category": "荤菜",
+    "description": "高血脂人群适宜: 选择去皮鸡胸肉，蛋白质含量高，脂肪含量低。搭配多种蔬菜，富含膳食纤维。使用少量橄榄油和醋汁作为调料。鸡胸肉和蔬菜能量较低，营养丰富。营养标签 (每100g): 蛋白质 15g，脂肪 3g，碳水 5g，反式脂肪 0g，胆固醇 40mg",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [],
+    "population_tags_readable": [          
+    ],
+    "disease_suitable_code": 8,
+    "disease_suitable_readable": [
+      "高血脂适宜"
+    ]
+  },
+  {
+    "id": "D029",
+    "name": "木耳炒山药",
+    "category": "素菜",
+    "description": "高血脂人群适宜: 木耳和山药均富含膳食纤维，有助于降低血脂。两者均为低脂低胆固醇食物。清炒方式，少油。能量较低，营养价值高。营养标签 (每100g): 蛋白质 1.5g，脂肪 0.2g，碳水 10g，反式脂肪 0g，胆固醇 0mg | 老年人营养特点 (木耳山药炒时蔬): 木耳和山药富含膳食纤维，有助于改善老年人常见便秘问题。山药健脾益气，木耳活血。两者均富含多种微量元素。食材软烂易消化，搭配少量瘦肉丝增加蛋白质。营养标签 (100g): 蛋白质 3g，脂肪 1g，碳水 12g，膳食纤维 3g，钠 25mg",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [],
+    "population_tags_readable": [          
+    ],
+    "disease_suitable_code": 72,
+    "disease_suitable_readable": [
+      "高血脂适宜",
+      "老年适宜"
+    ]
+  },
+  {
+    "id": "D030",
+    "name": "白灼秋葵",
+    "category": "素菜",
+    "description": "痛风人群需注意: 秋葵嘌呤含量属于中低（每100克约含25-75毫克嘌呤），急性发作期不建议食用，缓解期可适量食用。白灼方式简单，避免过多调味料。",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [],
+    "population_tags_readable": [          
+    ],
+    "disease_suitable_code": 0,
+    "disease_suitable_readable": []
+  },
+  {
+    "id": "D031",
+    "name": "炒时蔬",
+    "category": "素菜",
+    "description": "痛风人群适宜: 大部分绿叶蔬菜嘌呤含量低，如生菜、娃娃菜、油麦菜等。烹饪时减少油盐。",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [],
+    "population_tags_readable": [          
+    ],
+    "disease_suitable_code": 4,
+    "disease_suitable_readable": [
+      "痛风适宜"
+    ]
+  },
+  {
+    "id": "D036",
+    "name": "鱼泥豆腐羹",
+    "category": "汤",
+    "description": "老年人营养特点: 鱼肉和豆腐均富含优质蛋白，且质地软烂，易于老年人消化吸收。鱼肉（如去刺鳕鱼、鲈鱼）富含Omega-3脂肪酸，豆腐富含钙。羹状食物方便吞咽，避免呛咳。营养标签 (100g): 蛋白质 8g，脂肪 3g，碳水 2g，钙 80mg，钠 40mg",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [],
+    "population_tags_readable": [          
+    ],
+    "disease_suitable_code": 0,
+    "disease_suitable_readable": []
+  },
+  {
+    "id": "D037",
+    "name": "肉末蒸蛋羹",
+    "category": "荤菜",
+    "description": "老年人营养特点: 鸡蛋和少量瘦肉末提供优质蛋白质，蛋羹质地软嫩，易于消化。肉末可选择猪肉或鸡肉，剁碎后与蛋液混合蒸制。可搭配少量酱油调味，注意控制盐量。营养标签 (100g): 蛋白质 9g，脂肪 6g，碳水 1g，钙 40mg，钠 70mg | 青少年营养特点 (肉末蒸蛋羹): 鸡蛋和瘦肉提供双重优质蛋白，促进肌肉生长和修复。铁含量相对较高，有助于预防缺铁性贫血。质地软嫩，易于消化。营养标签 (100g): 蛋白质 10g，脂肪 7g，碳水 1g，铁 1.5mg，钠 70mg",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 1,
+    "disease_tags_readable": [],
+    "population_tags_readable": [          
+    ],
+    "disease_suitable_code": 84,
+    "disease_suitable_readable": [
+      "痛风适宜",
+      "青少年适宜",
+      "老年适宜"
+    ]
+  },
+  {
+    "id": "D038",
+    "name": "蔬菜杂烩粥",
+    "category": "汤",
+    "description": "老年人营养特点: 将多种蔬菜（如胡萝卜、青菜、香菇）切碎与米粥同煮，增加膳食纤维、维生素和矿物质摄入。粥品易消化，蔬菜软烂。可根据老年人喜好和季节选择不同蔬菜。营养标签 (100g): 蛋白质 1g，脂肪 0.3g，碳水 10g，膳食纤维 1.5g，钠 10mg",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [],
+    "population_tags_readable": [          
+    ],
+    "disease_suitable_code": 0,
+    "disease_suitable_readable": []
+  },
+  {
+    "id": "D039",
+    "name": "香煎三文鱼",
+    "category": "荤菜",
+    "description": "青少年营养特点: 三文鱼富含优质蛋白和Omega-3不饱和脂肪酸（尤其是DHA），对大脑发育和视力保护有益。三文鱼也富含维生素D，促进钙吸收。香煎方式可保留鱼肉的鲜美，注意控制油温和煎制时间。营养标签 (100g): 蛋白质 20g，脂肪 13g (其中Omega-3约2g)，碳水 0g，维生素D 10µg，钠 50mg",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [],
+    "population_tags_readable": [          
+    ],
+    "disease_suitable_code": 16,
+    "disease_suitable_readable": [
+      "青少年适宜"
+    ]
+  },
+  {
+    "id": "D040",
+    "name": "牛奶炖蛋",
+    "category": "汤",
+    "description": "青少年营养特点: 牛奶和鸡蛋结合，提供丰富的优质蛋白和钙质，促进骨骼和牙齿发育。做法简单，口感嫩滑。可根据口味加入少量糖调味，但不宜过甜。营养标签 (100g): 蛋白质 6g，脂肪 5g，碳水 4g，钙 80mg，钠 50mg",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [],
+    "population_tags_readable": [          
+    ],
+    "disease_suitable_code": 16,
+    "disease_suitable_readable": [
+      "青少年适宜"
+    ]
+  },
+  {
+    "id": "D041",
+    "name": "牛肉蔬菜卷",
+    "category": "荤菜",
+    "description": "青少年营养特点: 瘦牛肉提供优质蛋白和丰富的铁元素，预防缺铁性贫血，支持生长发育。搭配多种蔬菜（如胡萝卜丝、黄瓜丝、生菜叶），增加维生素和膳食纤维摄入。用薄饼或紫菜包裹，方便食用。营养标签 (每个约80g): 蛋白质 8g，脂肪 4g，碳水 10g，铁 1.2mg，钠 100mg",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 4,
+    "disease_tags_readable": [],
+    "population_tags_readable": [           
+    ],
+    "disease_suitable_code": 16,
+    "disease_suitable_readable": [
+      "青少年适宜"
+    ]
+  },
+  {
+    "id": "D042",
+    "name": "鸡肉杂蔬炒饭",
+    "category": "荤菜",
+    "description": "青少年营养特点: 鸡肉是优质蛋白来源，米饭提供碳水化合物作为主要能量来源。加入多种蔬菜丁（如玉米、豌豆、胡萝卜丁），增加膳食纤维、维生素和矿物质。炒饭时注意控制油量和盐量。营养标签 (每份约250g): 蛋白质 15g，脂肪 8g，碳水 40g，膳食纤维 3g，钠 300mg",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [],
+    "population_tags_readable": [           
+    ],
+    "disease_suitable_code": 16,
+    "disease_suitable_readable": [
+      "青少年适宜"
+    ]
+  },
+  {
+    "id": "D043",
+    "name": "豆腐蔬菜丸子汤",
+    "category": "汤",
+    "description": "青少年营养特点: 豆腐提供植物性优质蛋白和钙质。将豆腐、少量肉末（可选）和切碎的蔬菜（如香菇、胡萝卜）制成丸子，口感丰富。汤品易于消化，增加水分摄入。营养标签 (每份约300g): 蛋白质 10g，脂肪 5g，碳水 8g，钙 150mg，钠 250mg",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 1, 
+    "disease_tags_readable": [],
+    "population_tags_readable": [           
+    ],
+    "disease_suitable_code": 16,
+    "disease_suitable_readable": [
+      "青少年适宜"
+    ]
+  },
+  {
+    "id": "D044",
+    "name": "红枣枸杞鸡汤",
+    "category": "汤",
+    "description": "孕产妇营养特点: 鸡肉提供优质蛋白，红枣补气养血，枸杞明目。炖汤时可选用乌鸡，脂肪含量较低。适合孕中晚期及产后恢复期，温和滋补。营养标签 (每份约200ml): 蛋白质 10g，脂肪 5g，碳水 3g，铁 1.0mg，钠 40mg",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [],
+    "population_tags_readable": [            
+        "无已知主要过敏原"
+    ],
+    "disease_suitable_code": 32,
+    "disease_suitable_readable": [
+      "孕产妇适宜"
+    ]
+  },
+  {
+    "id": "D045",
+    "name": "菠菜猪肝汤",
+    "category": "汤",
+    "description": "孕产妇营养特点: 菠菜富含叶酸和铁，猪肝是铁的极好来源，两者搭配有助于预防和改善孕期贫血。猪肝也富含维生素A，但不宜过量。适合孕中晚期及产后补血。营养标签 (每份约200ml): 蛋白质 12g，脂肪 4g，碳水 2g，叶酸 100µg，铁 8mg，维生素A 2000IU",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 1,
+    "disease_tags_readable": [],
+    "population_tags_readable": [            
+        "无已知主要过敏原"
+    ],
+    "disease_suitable_code": 32,
+    "disease_suitable_readable": [
+      "孕产妇适宜"
+    ]
+  },
+  {
+    "id": "D046",
+    "name": "小米红糖粥",
+    "category": "汤",
+    "description": "孕产妇营养特点: 小米易消化，养胃健脾。红糖温补，有助于产后恢复，补充能量和少量铁质。适合产褥期食用。营养标签 (每份约200g): 蛋白质 2g，脂肪 0.5g，碳水 25g，铁 0.5mg，钠 5mg",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [],
+    "population_tags_readable": [            
+    ],
+    "disease_suitable_code": 32,
+    "disease_suitable_readable": [
+      "孕产妇适宜"
+    ]
+  },
+  {
+    "id": "D047",
+    "name": "鲫鱼豆腐汤",
+    "category": "汤",
+    "description": "孕产妇营养特点: 鲫鱼汤被认为有下奶催乳的功效，富含优质蛋白。豆腐提供钙质。汤品清淡，易于消化吸收。适合产后哺乳期妈妈。营养标签 (每份约200ml): 蛋白质 10g，脂肪 6g，碳水 1g，钙 100mg，钠 50mg",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [],
+    "population_tags_readable": [            
+    ],
+    "disease_suitable_code": 32,
+    "disease_suitable_readable": [
+      "孕产妇适宜"
+    ]
+  },
+  {
+    "id": "D048",
+    "name": "麻油猪腰",
+    "category": "荤菜",
+    "description": "孕产妇营养特点: 猪腰富含蛋白质、铁和多种维生素，麻油温补，有助于产后恢复和恶露排出。传统月子餐之一，但不宜过量食用，注意选择新鲜猪腰并彻底煮熟。营养标签 (每份约100g): 蛋白质 18g，脂肪 10g，碳水 1g，铁 7mg，钠 60mg",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 1,
+    "disease_tags_readable": [],
+    "population_tags_readable": [            
+        "无已知主要过敏原"
+    ],
+    "disease_suitable_code": 32,
+    "disease_suitable_readable": [
+      "孕产妇适宜"
+    ]
+  },
+  {
+    "id": "D049",
+    "name": "香煎鳕鱼块",
+    "category": "荤菜",
+    "description": "糖尿病不推荐: 香煎方式可能使用较多油脂，且鳕鱼本身虽适合，但烹饪方法不佳。",
+    "disease_blacklist_code": 1,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [
+      "糖尿病不适宜"
+    ],
+    "population_tags_readable": [            
+    ],
+    "disease_suitable_code": 0,
+    "disease_suitable_readable": []
+  },
+  {
+    "id": "D050",
+    "name": "糖醋里脊",
+    "category": "荤菜",
+    "description": "糖尿病禁忌: 含大量糖和淀粉，油脂含量也高。",
+    "disease_blacklist_code": 1,
+    "allergen_mask_code": 1,
+    "disease_tags_readable": [
+      "糖尿病不适宜"
+    ],
+    "population_tags_readable": [],
+    "disease_suitable_code": 0,
+    "disease_suitable_readable": []
+  },
+  {
+    "id": "D051",
+    "name": "拔丝地瓜",
+    "category": "素菜",
+    "description": "糖尿病禁忌: 主要成分是糖和高GI的红薯。",
+    "disease_blacklist_code": 1,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [
+      "糖尿病不适宜"
+    ],
+    "population_tags_readable": [            
+    ],
+    "disease_suitable_code": 0,
+    "disease_suitable_readable": []
+  },
+  {
+    "id": "D052",
+    "name": "红烧带鱼",
+    "category": "荤菜",
+    "description": "高血压人群不推荐: 红烧菜肴通常盐分较高，带鱼可能经过腌制或油炸。",
+    "disease_blacklist_code": 2,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [
+      "高血压不适宜"
+    ],
+    "population_tags_readable": [ 
+    ],
+    "disease_suitable_code": 0,
+    "disease_suitable_readable": []
+  },
+  {
+    "id": "D056",
+    "name": "毛血旺",
+    "category": "荤菜",
+    "description": "痛风人群禁忌: 动物内脏嘌呤含量极高，火锅汤底也可能嘌呤高。",
+    "disease_blacklist_code": 4,
+    "allergen_mask_code": 1,
+    "disease_tags_readable": [
+      "痛风不适宜"
+    ],
+    "population_tags_readable": [ 
+    ],
+    "disease_suitable_code": 0,
+    "disease_suitable_readable": []
+  },
+  {
+    "id": "D057",
+    "name": "啤酒海鲜大餐",
+    "category": "荤菜",
+    "description": "痛风人群禁忌: 啤酒和海鲜均为高嘌呤食物，两者同食极易诱发痛风。",
+    "disease_blacklist_code": 4,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [
+      "痛风不适宜"
+    ],
+    "population_tags_readable": [ 
+    ],
+    "disease_suitable_code": 0,
+    "disease_suitable_readable": []
+  },
+  {
+    "id": "D058",
+    "name": "老火靓汤",
+    "category": "汤",
+    "description": "痛风人群禁忌: 长时间熬煮的肉汤嘌呤含量非常高。",
+    "disease_blacklist_code": 4,
+    "allergen_mask_code": 1,
+    "disease_tags_readable": [
+      "痛风不适宜"
+    ],
+    "population_tags_readable": [ 
+    ],
+    "disease_suitable_code": 0,
+    "disease_suitable_readable": []
+  }
+]

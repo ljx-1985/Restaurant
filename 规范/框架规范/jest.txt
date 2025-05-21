@@ -1,0 +1,175 @@
+Jest 前端测试规范
+1. 引言
+本规范旨在提供一套 Jest 在前端项目中的测试指导原则和最佳实践，以确保测试代码的质量、可维护性和一致性。通过遵循本规范，我们可以提高项目的稳定性，降低 Bug 率，增强代码重构的信心，并加速开发迭代过程。
+
+2. 目标
+建立统一的测试标准，提升测试代码的可读性和可维护性。
+鼓励开发者编写高质量的单元测试和集成测试。
+明确不同类型测试的关注点。
+提高测试覆盖率，但不唯覆盖率论。
+将测试集成到 CI/CD 流程中，保障代码质量。
+3. 范围
+本规范适用于使用 Jest 作为测试框架的前端项目，包括但不限于：
+
+React, Vue, Angular 组件测试
+JavaScript/TypeScript 工具函数测试
+状态管理 (如 Redux, Vuex, Zustand) 相关测试
+自定义 Hook 或 Composition Function 测试
+API 调用模拟和测试
+4. 基本原则
+FAST 原则:
+Fast (快速): 测试应该运行迅速，以便频繁执行。
+Autonomous (自治): 测试应该是独立的，不依赖于其他测试或外部状态。
+Self-validating (自验证): 测试应该有明确的通过或失败结果。
+Timely (及时): 测试应该在编写代码的同时或紧随其后编写。
+可读性: 测试代码应像文档一样易于理解，清晰地表达测试意图。
+可维护性: 测试代码应易于修改和更新，与生产代码同步演进。
+专注性: 每个测试用例 (it/test block) 应该只测试一个特定的行为或场景。
+用户视角 (对于组件测试): 尽可能从用户的角度测试组件功能，模拟用户交互和可见结果，而不是测试内部实现细节。推荐使用 @testing-library/* 系列库。
+5. 文件结构与命名
+测试文件应放置在与被测试文件相同的目录下，或者一个独立的 __tests__ 文件夹中。
+测试文件命名应清晰表达其测试对象，通常使用 .test.js, .spec.js, .test.ts, .spec.ts 后缀。
+例如：src/utils/format.js 的测试文件可以是 src/utils/format.test.js 或 src/utils/__tests__/format.test.js。
+组件 src/components/Button.jsx 的测试文件可以是 src/components/Button.test.jsx。
+对于大型模块或组件，可以在 __tests__ 文件夹内进一步组织子文件夹。
+6. 测试描述 (describe 和 it/test)
+describe 块用于组织一组相关的测试，其描述应清晰指明被测试的模块、组件或功能单元。
+示例：describe('Format Utility Functions', () => { ... });
+示例：describe('Button Component', () => { ... });
+it 或 test 块用于定义单个测试用例，其描述应精确地说明该用例测试的具体行为或预期结果。
+描述应以“应该 (should)” 开头，例如：“should render correctly”, “should display user name”, “should call API on button click”。
+示例：it('should format currency with two decimal places', () => { ... });
+示例：test('should display the provided text', () => { ... });
+避免在描述中使用实现细节（如：测试内部 state 是否为 true），而是描述行为（如：点击按钮后，文本框应该显示加载中）。
+7. 测试结构 (AAA 模式)
+推荐使用 AAA (Arrange, Act, Assert) 模式来组织单个测试用例的代码：
+
+Arrange (准备): 设置测试所需的环境、数据、依赖项（如 Mocking）。
+Act (执行): 执行被测试的代码，模拟用户操作或调用函数。
+Assert (断言): 验证执行结果是否符合预期。
+<!-- end list -->
+
+JavaScript
+
+// 示例 (使用 React Testing Library)
+import { render, screen, fireEvent } from '@testing-library/react';
+import Button from './Button';
+
+describe('Button Component', () => {
+  it('should call the onClick handler when clicked', () => {
+    // Arrange: 准备 Mock 函数
+    const handleClick = jest.fn();
+    render(<Button onClick={handleClick}>Click Me</Button>);
+    const buttonElement = screen.getByText(/Click Me/i);
+
+    // Act: 执行点击操作
+    fireEvent.click(buttonElement);
+
+    // Assert: 验证 Mock 函数是否被调用
+    expect(handleClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('should be disabled when disabled prop is true', () => {
+    // Arrange: 准备组件，设置 disabled prop
+    render(<Button disabled>Click Me</Button>);
+    const buttonElement = screen.getByText(/Click Me/i);
+
+    // Act: 无需特定 Act，状态在渲染时已确定
+
+    // Assert: 验证按钮是否为 disabled 状态
+    expect(buttonElement).toBeDisabled();
+  });
+});
+8. 不同类型的测试
+8.1. 单元测试 (Unit Tests)
+关注点: 测试代码中最小的可独立测试单元（函数、纯组件、模块等）。
+原则: 隔离性强，不依赖外部环境和依赖项（使用 Mock）。
+适用场景: 工具函数、纯逻辑处理、不涉及 DOM 或外部状态的组件。
+8.2. 集成测试 (Integration Tests)
+关注点: 测试多个单元之间的协作是否正常，或者一个单元与外部依赖（如 API, 状态管理）的交互。
+原则: 测试单元间的接口和流程。
+适用场景: 组件间的交互、组件与 Store 的连接、Hook 与组件的结合、模拟 API 调用并验证数据流。推荐使用 @testing-library/* 模拟用户流程。
+8.3. 快照测试 (Snapshot Tests)
+关注点: 检查 UI 组件在特定输入下渲染的结构是否发生意外变化。
+原则: 主要用于防止 UI 回归，但不应过度依赖。对动态内容或频繁变化的组件谨慎使用。
+适用场景: 静态或结构稳定的组件，验证渲染输出。
+注意: 更新快照时需仔细审查 diff，确保变化是预期的。
+8.4. 组件测试 (Component Tests)
+关注点: 测试 UI 组件的渲染、用户交互、状态变化以及与外部数据的交互。
+原则: 优先使用 @testing-library/*，从用户角度出发，通过查询 DOM 元素进行断言，避免测试组件内部 state 或 props。
+适用场景: 所有 React/Vue/Angular 组件。
+9. Mocking 和 Spying
+何时使用 Mocking: 当被测试单元依赖于外部资源（如 API 调用、第三方模块、不可控的环境）时，使用 Mocking 来隔离测试单元，控制依赖的行为，使其返回可预测的结果。
+何时使用 Spying: 当你想验证一个函数或方法的调用情况（是否被调用、调用次数、调用参数）时，但不改变其原有实现。
+Mocking 策略:
+使用 jest.fn() 创建 Mock 函数。
+使用 jest.mock('module-name') 模拟整个模块。
+使用 jest.spyOn(object, 'method') 监听对象上的方法。
+尽量 Mock 依赖，而不是被测试的代码本身。
+避免过度 Mock，导致测试脱离实际。
+清理 Mock: 在 afterEach 或 afterAll 中使用 jest.clearAllMocks() 或 jest.resetAllMocks() 清理 Mock 状态，确保测试独立。
+10. 异步测试
+Jest 支持 Promise、Async/Await 等异步测试方式。
+对于基于 Promise 的异步代码，直接返回 Promise 或使用 async/await。
+对于涉及 DOM 更新或事件循环的异步操作（如用户点击后的 UI 变化），使用 @testing-library/react 提供的 waitFor, findBy* 等工具，它们会等待断言成功。
+<!-- end list -->
+
+JavaScript
+
+// 示例 (异步测试 with async/await and waitFor)
+it('should load data after button click', async () => {
+  // Arrange: Mock API 调用
+  const mockFetch = jest.fn(() =>
+    Promise.resolve({ json: () => Promise.resolve({ name: 'Test User' }) })
+  );
+  global.fetch = mockFetch; // 临时 Mock 全局 fetch
+
+  render(<DataLoader />); // DataLoader 组件内部会调用 fetch
+
+  const loadButton = screen.getByRole('button', { name: /Load Data/i });
+
+  // Act: 点击按钮
+  fireEvent.click(loadButton);
+
+  // Assert: 等待并验证数据显示
+  const userNameElement = await screen.findByText(/Test User/i);
+  expect(userNameElement).toBeInTheDocument();
+
+  // Cleanup Mock
+  delete global.fetch;
+});
+11. 测试覆盖率 (Code Coverage)
+测试覆盖率是衡量测试充分性的一个指标，但不是唯一指标。高覆盖率不等于高代码质量。
+我们追求有意义的测试覆盖，而不是为了追求数字而编写低质量测试。
+可以设置一个合理的最低覆盖率阈值（例如，语句覆盖率 80%），并在 CI 中强制执行。
+定期查看覆盖率报告，识别测试薄弱区域，并优先为复杂或核心逻辑编写测试。
+12. CI/CD 集成
+将测试运行作为持续集成流程的关键一步。
+任何代码提交都应该触发测试运行。
+如果测试失败，构建过程应该中断，阻止问题代码合入主分支。
+13. 测试的可维护性
+当重构生产代码时，同步更新相关的测试代码。
+删除无用的测试文件或测试用例。
+保持测试代码的整洁和规范，如同对待生产代码一样。
+定期评审测试代码。
+14. 常用的 Matcher (断言)
+Jest 提供了丰富的 Matcher，常用的包括：
+
+通用: toBe(), toEqual(), not.toBe(), not.toEqual()
+布尔: toBeNull(), toBeUndefined(), toBeDefined(), toBeTruthy(), toBeFalsy()
+数字: toBeGreaterThan(), toBeGreaterThanOrEqual(), toBeLessThan(), toBeLessThanOrEqual(), toBeCloseTo()
+字符串: toMatch() (正则表达式)
+数组/迭代器: toContain(), toHaveLength()
+对象: toHaveProperty()
+异常: toThrow()
+Mock 函数: toHaveBeenCalled(), toHaveBeenCalledTimes(), toHaveBeenCalledWith(), toHaveBeenLastCalledWith(), toHaveReturnedWith()
+DOM (使用 @testing-library/jest-dom): toBeInTheDocument(), toBeVisible(), toBeDisabled(), toHaveClass(), toHaveAttribute(), toHaveTextContent() 等。
+15. 建议的工具和库
+Jest: 核心测试框架。
+*@testing-library/ (特别是 @testing-library/react, @testing-library/vue 等)**: 用于模拟用户交互和查询 DOM，推荐的组件测试库。
+@testing-library/jest-dom: 提供了用于断言 DOM 状态的 Jest Matcher。
+msw (Mock Service Worker): 用于 Mock 实际的网络请求，比手动 Mock Workspace 或 axios 更强大和真实。
+@testing-library/react-hooks (对于 React Hook 测试): 在 React 18+ 中已并入 @testing-library/react 的 renderHook 方法。
+16. 测试评审
+测试代码应该被视为生产代码的一部分，与其他代码一起进行 Code Review。
+评审时应关注测试的有效性、可读性、覆盖场景是否全面、Mocking 是否合理等方面。
