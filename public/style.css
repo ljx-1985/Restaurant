@@ -170,7 +170,8 @@ h2 {
 
 /* 按钮组通用样式 */
 .disease-buttons,
-.allergy-buttons {
+.allergy-buttons,
+#flavorButtons {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
@@ -178,7 +179,8 @@ h2 {
 }
 
 .disease-btn,
-.allergy-btn {
+.allergy-btn,
+.flavor-btn {
     background-color: #f1f1f1;
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -189,12 +191,14 @@ h2 {
 }
 
 .disease-btn:hover,
-.allergy-btn:hover {
+.allergy-btn:hover,
+.flavor-btn:hover {
     background-color: #e4e4e4;
 }
 
 .disease-btn.active,
-.allergy-btn.active {
+.allergy-btn.active,
+.flavor-btn.active {
     background-color: #3498db;
     color: white;
     border-color: #2980b9;

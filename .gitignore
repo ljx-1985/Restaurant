@@ -127,4 +127,9 @@ DynamoDBLocal_lib/
 .vercel
 
 # SST
-.sst 
+.sst
+
+# Test reports and logs
+/test-report/
+*.test_log.txt
+test_log_*.txt 

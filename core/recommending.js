@@ -33,18 +33,19 @@
  */
 
 /**
- * 根据用户的健康状况推荐最适合的菜品。
- * 新增逻辑：按"荤菜"、"素菜"、"汤"各推荐一个得分最高的菜品。
- *
- * @param {UserInput} userInput - 用户的健康状况输入，包含基础情况编码。
- * @param {Dish[]} allDishes - 包含所有菜品信息的数组，每个菜品需包含 `category` 字段。
- * @returns {Dish[]} 返回推荐的菜品列表，每个品类最多一个（不包含recommendScore属性）。
+ * 根据用户偏好和菜品数据推荐菜品。
+ * @param {object} userPreferences 用户偏好，包含 diseases (number), allergy_mask (number), preferences (string[]), flavor_preferences (string[] | undefined)
+ * @param {object[]} allDishes 所有菜品数据的数组。
+ * @param {boolean} skipCategoryLogging 是否跳过品类日志记录（用于测试）
+ * @returns {object[]} 推荐菜品列表。
  */
-function recommendDishes(userInput, allDishes) {
-  console.log("用户输入:", userInput);
+function recommendDishes(userPreferences, allDishes, skipCategoryLogging = false) {
+  const { diseases, allergy_mask, preferences, flavor_preferences } = userPreferences;
 
-  if (!userInput || typeof userInput.diseases !== 'number' || (userInput.allergy_mask !== undefined && typeof userInput.allergy_mask !== 'number')) {
-    console.error("错误：用户输入格式不正确。userInput:", userInput);
+  console.log("用户输入:", userPreferences);
+
+  if (!userPreferences || typeof diseases !== 'number' || (allergy_mask !== undefined && typeof allergy_mask !== 'number')) {
+    console.error("错误：用户输入格式不正确。userPreferences:", userPreferences);
     return []; 
   }
   if (!Array.isArray(allDishes)) {
@@ -54,6 +55,15 @@ function recommendDishes(userInput, allDishes) {
 
   // 定义目标品类
   const CATEGORIES_ORDER = ["荤菜", "素菜", "汤"]; // 定义品类顺序
+
+  // 如果一开始就没有菜品输入，则为每个品类记录警告并返回
+  if (allDishes.length === 0) {
+    console.log("警告: 输入的菜品列表为空。");
+    CATEGORIES_ORDER.forEach(category => {
+      console.warn(`警告：${category}品类中没有可选的菜品。`);
+    });
+    return [];
+  }
 
   // 输出总菜品数量
   console.log("总菜品数量:", allDishes.length);
@@ -80,7 +90,7 @@ function recommendDishes(userInput, allDishes) {
   // 如果没有菜品含有营养素数据，则使用全部菜品
   let dishesToProcess = dishesWithNutrition;
   if (dishesToProcess.length === 0) {
-    console.log("警告: 没有菜品含有营养素数据，将使用全部菜品");
+    console.warn("警告: 没有菜品含有营养素数据，将使用全部菜品");
     dishesToProcess = allDishes;
   }
 
@@ -103,15 +113,15 @@ function recommendDishes(userInput, allDishes) {
     }
 
     // 检查基础情况限制（禁忌表逻辑）
-    const isDiseaseSafe = (dish.disease_blacklist_code & userInput.diseases) === 0;
+    const isDiseaseSafe = (dish.disease_blacklist_code & diseases) === 0;
 
     // 检查忌口限制
     // 如果用户传入了 allergy_mask，并且菜品也有 allergen_mask_code，则进行比较
     // 如果菜品没有 allergen_mask_code (假设为0或undefined)，则默认通过忌口检查 (除非用户忌口为0)
     let isAllergySafe = true;
-    if (userInput.allergy_mask !== undefined && userInput.allergy_mask !== 0) {
+    if (allergy_mask !== undefined && allergy_mask !== 0) {
       if (dish.allergen_mask_code !== undefined) {
-        isAllergySafe = (dish.allergen_mask_code & userInput.allergy_mask) === 0;
+        isAllergySafe = (dish.allergen_mask_code & allergy_mask) === 0;
       } else {
         // 如果菜品没有忌口信息，而用户有忌口选择（非0），则视为不安全，除非特定场景另有定义
         // 为保守起见，如果用户有忌口，但菜品无忌口信息，则不推荐
@@ -120,17 +130,21 @@ function recommendDishes(userInput, allDishes) {
         // 然而，更安全的做法是，如果用户有忌口，而菜品没有忌口信息，则不推荐，防止信息缺失导致问题。
         // 但根据现有逻辑，如果allergen_mask_code不存在，则不应阻止推荐。
         // 我们假设 allergen_mask_code 为 0 （无忌口）如果它未定义
-        isAllergySafe = ((dish.allergen_mask_code || 0) & userInput.allergy_mask) === 0;
+        isAllergySafe = ((dish.allergen_mask_code || 0) & allergy_mask) === 0;
       }
     }
 
     // 记录过滤条件，如果菜品被过滤掉
     if (!isDiseaseSafe || !isAllergySafe) {
-      console.log(`菜品 "${dish.name}" 被过滤掉 - disease安全: ${isDiseaseSafe}, allergy安全: ${isAllergySafe}, 菜品数据:`, {
+      let reason = "";
+      if (!isDiseaseSafe) reason += "(疾病不适宜)";
+      if (!isAllergySafe) reason += (reason ? " " : "") + "(含过敏原)";
+
+      console.log(`菜品 \"${dish.name}\" 被过滤掉 ${reason} - disease安全: ${isDiseaseSafe}, allergy安全: ${isAllergySafe}, 菜品数据:`, {
         disease_blacklist_code: dish.disease_blacklist_code,
         allergen_mask_code: dish.allergen_mask_code,
-        user_diseases: userInput.diseases,
-        user_allergy_mask: userInput.allergy_mask
+        user_diseases: diseases,
+        user_allergy_mask: allergy_mask
       });
     }
 
@@ -152,9 +166,33 @@ function recommendDishes(userInput, allDishes) {
     return [];
   }
 
+  // 新增：口味偏好过滤
+  let flavorFilteredDishes = safetyFilteredDishes;
+  if (flavor_preferences && flavor_preferences.length > 0) {
+    flavorFilteredDishes = safetyFilteredDishes.filter(dish => {
+      if (!dish.flavor_tags || dish.flavor_tags.length === 0) {
+        // 如果菜品没有口味标签，根据讨论，当用户指定了口味偏好时，
+        // 这些没有明确口味的菜品应该被保留，因为无法判断它们是否与用户偏好冲突。
+        return true; // 修正：没有口味标签的菜品在用户指定偏好时予以保留
+      }
+      // 如果菜品有口味标签，则检查是否至少有一个标签与用户偏好匹配
+      return dish.flavor_tags.some(tag => flavor_preferences.includes(tag));
+    });
+    console.log(`口味偏好过滤后，剩下 ${flavorFilteredDishes.length} 道菜。`);
+    if (flavorFilteredDishes.length < safetyFilteredDishes.length) {
+        const diff = safetyFilteredDishes.filter(x => !flavorFilteredDishes.includes(x));
+        // 避免在测试中打印过多日志，仅当ID存在时打印
+        if (diff.length > 0 && diff[0] && diff[0].id) { 
+            console.log(`因口味偏好被过滤掉的菜品ID示例: ${diff.slice(0,5).map(d => d.id).join(', ')}`);
+        }
+    }
+  } else {
+    if (!skipCategoryLogging) console.log('用户未指定口味偏好，跳过口味过滤。');
+  }
+
   // 为每个菜品计算推荐得分
-  const scoredDishes = safetyFilteredDishes.map(dish => {
-    let score = 60; // 基础分
+  const scoredDishes = flavorFilteredDishes.map(dish => {
+    let score = dish.base_score || 50; 
     const description = (dish.description || '').toLowerCase();
 
     // 1. 根据菜品描述长度加分 - 描述越丰富，信息越完整
@@ -171,29 +209,31 @@ function recommendDishes(userInput, allDishes) {
     }
 
     // 3. 推荐表逻辑 - 如果菜品明确标记为适合用户的情况，大幅加分
-    if (dish.disease_suitable_code && (dish.disease_suitable_code & userInput.diseases) !== 0) {
+    // 用户健康需求码，优先使用 health_needs_code, 否则使用 diseases
+    const userNeedsCode = userPreferences.health_needs_code !== undefined ? userPreferences.health_needs_code : diseases;
+    if (dish.disease_suitable_code && userNeedsCode && (dish.disease_suitable_code & userNeedsCode) !== 0) {
       // 计算匹配的人群数量（有多少个1位匹配）
       let matchingConditions = 0;
-      let tempUserDiseases = userInput.diseases;
+      let tempUserNeeds = userNeedsCode;
       let tempDishSuitable = dish.disease_suitable_code;
       
-      while (tempUserDiseases > 0 && tempDishSuitable > 0) {
-        if ((tempUserDiseases & 1) && (tempDishSuitable & 1)) {
+      while (tempUserNeeds > 0 && tempDishSuitable > 0) {
+        if ((tempUserNeeds & 1) && (tempDishSuitable & 1)) {
           matchingConditions++;
         }
-        tempUserDiseases >>= 1;
+        tempUserNeeds >>= 1;
         tempDishSuitable >>= 1;
       }
       
       // 每匹配一个人群加15分
       score += matchingConditions * 15;
       
-      console.log(`菜品 "${dish.name}" 匹配了${matchingConditions}个推荐人群，加分: ${matchingConditions * 15}`);
+      console.log(`菜品 \"${dish.name}\" 匹配了${matchingConditions}个推荐人群 (基于 userNeedsCode: ${userNeedsCode})，加分: ${matchingConditions * 15}`);
     }
 
     // 4. 特殊人群相关推荐（基于描述中的关键词）
     // 青少年(16)
-    if ((userInput.diseases & 16) !== 0) {
+    if ((diseases & 16) !== 0) {
       if (description.includes('适合青少年') || description.includes('青少年营养') || 
           description.includes('有利于成长') || description.includes('促进发育')) {
         score += 10;
@@ -201,7 +241,7 @@ function recommendDishes(userInput, allDishes) {
     }
 
     // 孕产妇(32)
-    if ((userInput.diseases & 32) !== 0) {
+    if ((diseases & 32) !== 0) {
       if (description.includes('适合孕产妇') || description.includes('孕产妇营养') || 
           description.includes('富含叶酸') || description.includes('补充铁质') ||
           description.includes('孕期') || description.includes('哺乳期')) {
@@ -210,7 +250,7 @@ function recommendDishes(userInput, allDishes) {
     }
 
     // 老年人(64)
-    if ((userInput.diseases & 64) !== 0) {
+    if ((diseases & 64) !== 0) {
       if (description.includes('适合老年') || description.includes('老年营养') || 
           description.includes('容易消化') || description.includes('软烂易嚼')) {
         score += 10;
@@ -219,7 +259,7 @@ function recommendDishes(userInput, allDishes) {
 
     // 5. 疾病相关推荐（基于描述中的关键词）
     // 糖尿病(1)
-    if ((userInput.diseases & 1) !== 0) {
+    if ((diseases & 1) !== 0) {
       if (description.includes('低糖') || description.includes('糖尿病适宜') || 
           description.includes('血糖控制')) {
         score += 10;
@@ -227,7 +267,7 @@ function recommendDishes(userInput, allDishes) {
     }
 
     // 高血压(2)
-    if ((userInput.diseases & 2) !== 0) {
+    if ((diseases & 2) !== 0) {
       if (description.includes('低钠') || description.includes('少盐') || 
           description.includes('高血压适宜') || description.includes('降压')) {
         score += 10;
@@ -235,7 +275,7 @@ function recommendDishes(userInput, allDishes) {
     }
 
     // 痛风(4)
-    if ((userInput.diseases & 4) !== 0) {
+    if ((diseases & 4) !== 0) {
       if (description.includes('低嘌呤') || description.includes('痛风适宜') || 
           description.includes('植物蛋白')) {
         score += 10;
@@ -243,38 +283,52 @@ function recommendDishes(userInput, allDishes) {
     }
 
     // 高血脂(8)
-    if ((userInput.diseases & 8) !== 0) {
+    if ((diseases & 8) !== 0) {
       if (description.includes('低脂') || description.includes('高血脂适宜') || 
           description.includes('不含反式脂肪') || description.includes('低胆固醇')) {
         score += 10;
       }
     }
 
+    // 6. 根据用户平均评分加分
+    if (dish.user_ratings && dish.user_ratings.length > 0) {
+      const sum = dish.user_ratings.reduce((acc, rating) => acc + rating, 0);
+      const averageRating = sum / dish.user_ratings.length;
+      if (averageRating >= 4.5) {
+        score += 15;
+      } else if (averageRating >= 4.0) {
+        score += 10;
+      } else if (averageRating >= 3.0) {
+        score += 5;
+      }
+      console.log(`菜品 "${dish.name}" 平均分 ${averageRating.toFixed(1)}，加分基于评分。`);
+    }
+
     return { ...dish, recommendScore: Math.min(score, 100) };
   });
 
-  // 按品类选择最佳菜品
-  const bestInCategory = {};
-  CATEGORIES_ORDER.forEach(category => {
-    bestInCategory[category] = null;
-  });
+  const MAIN_COURSE_CATEGORIES = ["荤菜", "素菜", "汤"];
+  const recommendationsByCategory = {};
 
-  scoredDishes.forEach(dish => {
-    if (CATEGORIES_ORDER.includes(dish.category)) {
-      if (!bestInCategory[dish.category] || dish.recommendScore > bestInCategory[dish.category].recommendScore) {
-        bestInCategory[dish.category] = dish;
+  MAIN_COURSE_CATEGORIES.forEach(category => {
+    // 从已经过安全过滤和口味过滤，并且已评分的菜品中筛选当前品类
+    const categoryDishes = scoredDishes.filter(dish => dish.category === category);
+
+    if (categoryDishes.length > 0) {
+      // 直接对这些菜品按分数降序排序，因为它们已经通过了口味偏好过滤（如果用户指定了偏好）
+      categoryDishes.sort((a, b) => b.recommendScore - a.recommendScore);
+      recommendationsByCategory[category] = categoryDishes[0];
+      if (!skipCategoryLogging) {
+        console.log(`品类 [${category}] 推荐: ${categoryDishes[0].name} (得分: ${categoryDishes[0].recommendScore})`);
+      }
+    } else {
+      if (!skipCategoryLogging) {
+        console.warn(`警告：${category}品类中没有可选的菜品。`);
       }
     }
   });
-  
-  // 构建最终推荐列表，并移除 recommendScore
-  const finalRecommendations = [];
-  CATEGORIES_ORDER.forEach(category => {
-    if (bestInCategory[category]) {
-      const { recommendScore, ...rest } = bestInCategory[category];
-      finalRecommendations.push(rest);
-    }
-  });
+
+  const finalRecommendations = Object.values(recommendationsByCategory);
 
   console.log("按品类推荐菜品:", finalRecommendations.map(dish => `${dish.name} (品类: ${dish.category})`));
   if (finalRecommendations.length > 0) {

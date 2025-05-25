@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultsOutput = document.getElementById('resultsOutput');
     const diseaseButtons = document.querySelectorAll('.disease-btn');
     const allergyButtons = document.querySelectorAll('.allergy-btn');  // 忌口按钮
+    const flavorButtons = document.querySelectorAll('#flavorButtons .flavor-btn'); // 获取口味偏好按钮
     const continueRecommendBtn = document.getElementById('continueRecommendBtn');
 
     // 为基础情况按钮添加点击事件（改为多选模式）
@@ -96,6 +97,42 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // 为口味偏好按钮添加点击事件
+    flavorButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const isNoneButton = button.dataset.value === ""; // 检查是否是"无"按钮
+            const noneButton = document.querySelector('#flavorButtons .flavor-btn[data-value=""]');
+
+            if (isNoneButton) {
+                // 如果点击的是"无"按钮
+                flavorButtons.forEach(btn => {
+                    if (btn !== button) {
+                        btn.classList.remove('active');
+                    }
+                });
+                button.classList.add('active');
+            } else {
+                // 如果点击的是其他口味按钮
+                if (noneButton) {
+                    noneButton.classList.remove('active'); // 取消"无"按钮的激活状态
+                }
+                button.classList.toggle('active'); // 切换当前按钮的激活状态
+
+                // 检查是否有任何活动的口味按钮，如果没有，则激活"无"按钮
+                let anyFlavorActive = false;
+                flavorButtons.forEach(btn => {
+                    if (btn.dataset.value !== "" && btn.classList.contains('active')) {
+                        anyFlavorActive = true;
+                    }
+                });
+
+                if (!anyFlavorActive && noneButton) {
+                    noneButton.classList.add('active');
+                }
+            }
+        });
+    });
+
     // 已显示的菜品ID集合，用于确保不会重复推荐
     let displayedDishIds = new Set();
     
@@ -126,6 +163,17 @@ document.addEventListener('DOMContentLoaded', () => {
             allergy_mask
         };
 
+        // 更新：获取口味偏好
+        let flavorPreferences = [];
+        const activeFlavorButtons = document.querySelectorAll('#flavorButtons .flavor-btn.active');
+        activeFlavorButtons.forEach(btn => {
+            if (btn.dataset.value !== "") { // 只添加非"无"按钮的值
+                flavorPreferences.push(btn.dataset.value);
+            }
+        });
+        // 如果只有"无"按钮是active，或者没有任何按钮是active（理论上后者不应发生，因为"无"会补位），
+        // flavorPreferences 此时应为空数组，这是正确的。
+
         showLoadingMessage('正在推荐，请稍候...');
 
         try {
@@ -134,7 +182,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(currentUserPreferences),
+                body: JSON.stringify({
+                    ...currentUserPreferences,
+                    flavor_preferences: flavorPreferences
+                }),
             });
 
             if (!response.ok) {
@@ -177,6 +228,15 @@ document.addEventListener('DOMContentLoaded', () => {
             // 获取要排除的菜品ID列表
             const excludeIds = Array.from(displayedDishIds);
             
+            // 更新：获取口味偏好
+            let flavorPreferencesContinue = [];
+            const activeFlavorButtonsContinue = document.querySelectorAll('#flavorButtons .flavor-btn.active');
+            activeFlavorButtonsContinue.forEach(btn => {
+                if (btn.dataset.value !== "") { // 只添加非"无"按钮的值
+                    flavorPreferencesContinue.push(btn.dataset.value);
+                }
+            });
+            
             const response = await fetch('/recommend', {
                 method: 'POST',
                 headers: {
@@ -184,7 +244,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 body: JSON.stringify({
                     ...currentUserPreferences,
-                    excludeIds: excludeIds // 添加已显示的菜品ID，告诉后端排除这些
+                    excludeIds: excludeIds, // 添加已显示的菜品ID，告诉后端排除这些
+                    flavor_preferences: flavorPreferencesContinue // 使用更新后的偏好获取逻辑
                 }),
             });
 

@@ -1,0 +1,49 @@
+config:
+  target: "http://localhost:3001" # 您的应用运行地址和端口
+  phases:
+    - duration: 60 # 测试阶段持续时间（秒）
+      arrivalRate: 5 # 每秒启动的新虚拟用户数
+      name: "Warm up the API"
+    - duration: 120
+      arrivalRate: 5
+      rampTo: 50 # 在此阶段结束时，每秒启动的新虚拟用户数逐渐增加到50
+      name: "Ramp up to 50 users per second"
+    - duration: 120
+      arrivalRate: 50 
+      rampTo: 100 # 在此阶段结束时，每秒启动的新虚拟用户数逐渐增加到100
+      name: "Sustained load at 100 users per second"
+  # 可以添加全局的payload，或者在每个scenario中定义
+  # payload:
+    # path: "user_inputs.csv" # 如果你想从CSV加载动态数据
+    # fields:
+    #   - "diseases"
+    #   - "allergy_mask"
+    # order: sequence # 或者 random
+  defaults:
+    headers:
+      Content-Type: "application/json"
+
+scenarios:
+  - name: "Recommend Dishes API"
+    flow:
+      - post:
+          url: "/recommend"
+          json: # 你可以根据需要修改这个请求体，或者使用外部CSV文件
+            diseases: 0 
+            allergy_mask: 0
+            preferences: ["safe preference 1", "safe preference 2"] # 使用不触发XSS验证的偏好
+            # excludeIds: [] 
+          capture: # 可选：捕获响应中的某些值
+            - json: "$.length" # 捕获返回数组的长度
+              as: "recommendationCount"
+      - think: 1 # 每个虚拟用户在下次请求前暂停1秒 (模拟真实用户行为)
+
+  # 你可以为 /filter 端点添加另一个 scenario
+  # - name: "Filter Dishes API"
+  #   flow:
+  #     - post:
+  #         url: "/filter"
+  #         json:
+  #           diseases: 1
+  #           allergy_mask: 0
+  #     - think: 1 

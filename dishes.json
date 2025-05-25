@@ -18,7 +18,8 @@
       "青少年适宜",
       "孕产妇适宜",
       "老年适宜"
-    ]
+    ],
+    "flavor_tags": ["清淡"]
   },
   {
     "id": "D002",
@@ -34,7 +35,8 @@
     "population_tags_readable": [
     ],
     "disease_suitable_code": 0,
-    "disease_suitable_readable": []
+    "disease_suitable_readable": [],
+    "flavor_tags": ["鲜浓"]
   },
   {
     "id": "D003",
@@ -49,7 +51,8 @@
     "population_tags_readable": [
     ],
     "disease_suitable_code": 0,
-    "disease_suitable_readable": []
+    "disease_suitable_readable": [],
+    "flavor_tags": ["鲜浓", "清淡"]
   },
   {
     "id": "D006",
@@ -62,7 +65,8 @@
     "population_tags_readable": [
     ],
     "disease_suitable_code": 0,
-    "disease_suitable_readable": []
+    "disease_suitable_readable": [],
+    "flavor_tags": ["清淡", "甜"]
   },
   {
     "id": "D007",
@@ -78,7 +82,8 @@
     "population_tags_readable": [
     ],
     "disease_suitable_code": 0,
-    "disease_suitable_readable": []
+    "disease_suitable_readable": [],
+    "flavor_tags": ["辣", "鲜浓"]
   },
   {
     "id": "D008",
