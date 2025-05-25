@@ -40,7 +40,7 @@
  * @returns {object[]} 推荐菜品列表。
  */
 function recommendDishes(userPreferences, allDishes, skipCategoryLogging = false) {
-  const { diseases, allergy_mask, preferences, flavor_preferences } = userPreferences;
+  const { diseases, allergy_mask, flavor_preferences } = userPreferences;
 
   console.log("用户输入:", userPreferences);
 
@@ -166,32 +166,13 @@ function recommendDishes(userPreferences, allDishes, skipCategoryLogging = false
     return [];
   }
 
-  // 新增：口味偏好过滤
-  let flavorFilteredDishes = safetyFilteredDishes;
-  if (flavor_preferences && flavor_preferences.length > 0) {
-    flavorFilteredDishes = safetyFilteredDishes.filter(dish => {
-      if (!dish.flavor_tags || dish.flavor_tags.length === 0) {
-        // 如果菜品没有口味标签，根据讨论，当用户指定了口味偏好时，
-        // 这些没有明确口味的菜品应该被保留，因为无法判断它们是否与用户偏好冲突。
-        return true; // 修正：没有口味标签的菜品在用户指定偏好时予以保留
-      }
-      // 如果菜品有口味标签，则检查是否至少有一个标签与用户偏好匹配
-      return dish.flavor_tags.some(tag => flavor_preferences.includes(tag));
-    });
-    console.log(`口味偏好过滤后，剩下 ${flavorFilteredDishes.length} 道菜。`);
-    if (flavorFilteredDishes.length < safetyFilteredDishes.length) {
-        const diff = safetyFilteredDishes.filter(x => !flavorFilteredDishes.includes(x));
-        // 避免在测试中打印过多日志，仅当ID存在时打印
-        if (diff.length > 0 && diff[0] && diff[0].id) { 
-            console.log(`因口味偏好被过滤掉的菜品ID示例: ${diff.slice(0,5).map(d => d.id).join(', ')}`);
-        }
-    }
-  } else {
-    if (!skipCategoryLogging) console.log('用户未指定口味偏好，跳过口味过滤。');
-  }
+  // 修改：不再进行口味过滤，而是在评分阶段给匹配口味偏好的菜品加分
+  // 所有通过安全过滤的菜品都参与推荐
+  let dishesToScore = safetyFilteredDishes;
+  console.log(`所有安全菜品都参与推荐，总数: ${dishesToScore.length}`);
 
   // 为每个菜品计算推荐得分
-  const scoredDishes = flavorFilteredDishes.map(dish => {
+  const scoredDishes = dishesToScore.map(dish => {
     let score = dish.base_score || 50; 
     const description = (dish.description || '').toLowerCase();
 
@@ -208,7 +189,25 @@ function recommendDishes(userPreferences, allDishes, skipCategoryLogging = false
       score += nonZeroValues * 2; // 每个非零营养素加2分
     }
 
-    // 3. 推荐表逻辑 - 如果菜品明确标记为适合用户的情况，大幅加分
+    // 3. 口味偏好匹配加分（新增的推荐逻辑）
+    if (flavor_preferences && flavor_preferences.length > 0) {
+      if (dish.flavor_tags && dish.flavor_tags.length > 0) {
+        // 计算匹配的口味标签数量
+        const matchingFlavors = dish.flavor_tags.filter(tag => flavor_preferences.includes(tag));
+        if (matchingFlavors.length > 0) {
+          // 每匹配一个口味偏好加20分，最多加40分
+          const flavorScore = Math.min(matchingFlavors.length * 20, 40);
+          score += flavorScore;
+          console.log(`菜品 "${dish.name}" 匹配口味偏好 [${matchingFlavors.join(', ')}]，加分: ${flavorScore}`);
+        }
+      } else {
+        // 没有口味标签的菜品给予中等加分（10分），因为无法确定是否匹配
+        score += 10;
+        console.log(`菜品 "${dish.name}" 无口味标签，给予中等加分: 10`);
+      }
+    }
+
+    // 4. 推荐表逻辑 - 如果菜品明确标记为适合用户的情况，大幅加分
     // 用户健康需求码，优先使用 health_needs_code, 否则使用 diseases
     const userNeedsCode = userPreferences.health_needs_code !== undefined ? userPreferences.health_needs_code : diseases;
     if (dish.disease_suitable_code && userNeedsCode && (dish.disease_suitable_code & userNeedsCode) !== 0) {
@@ -231,7 +230,7 @@ function recommendDishes(userPreferences, allDishes, skipCategoryLogging = false
       console.log(`菜品 \"${dish.name}\" 匹配了${matchingConditions}个推荐人群 (基于 userNeedsCode: ${userNeedsCode})，加分: ${matchingConditions * 15}`);
     }
 
-    // 4. 特殊人群相关推荐（基于描述中的关键词）
+    // 5. 特殊人群相关推荐（基于描述中的关键词）
     // 青少年(16)
     if ((diseases & 16) !== 0) {
       if (description.includes('适合青少年') || description.includes('青少年营养') || 
@@ -257,7 +256,7 @@ function recommendDishes(userPreferences, allDishes, skipCategoryLogging = false
       }
     }
 
-    // 5. 疾病相关推荐（基于描述中的关键词）
+    // 6. 疾病相关推荐（基于描述中的关键词）
     // 糖尿病(1)
     if ((diseases & 1) !== 0) {
       if (description.includes('低糖') || description.includes('糖尿病适宜') || 
@@ -290,7 +289,7 @@ function recommendDishes(userPreferences, allDishes, skipCategoryLogging = false
       }
     }
 
-    // 6. 根据用户平均评分加分
+    // 7. 根据用户平均评分加分
     if (dish.user_ratings && dish.user_ratings.length > 0) {
       const sum = dish.user_ratings.reduce((acc, rating) => acc + rating, 0);
       const averageRating = sum / dish.user_ratings.length;

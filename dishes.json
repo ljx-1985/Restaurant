@@ -96,7 +96,8 @@
     "population_tags_readable": [
     ],
     "disease_suitable_code": 0,
-    "disease_suitable_readable": []
+    "disease_suitable_readable": [],
+    "flavor_tags": ["甜", "辣", "鲜浓"]
   },
   {
     "id": "D009",
@@ -115,7 +116,8 @@
       "高血压适宜",
       "高血脂适宜",
       "老年适宜"
-    ]
+    ],
+    "flavor_tags": ["清淡", "鲜浓"]
   },
   {
     "id": "D010",
@@ -133,7 +135,8 @@
       "高血压适宜",
       "高血脂适宜",
       "老年适宜"
-    ]
+    ],
+    "flavor_tags": ["清淡", "鲜浓"]
   },
   {
     "id": "D011",
@@ -147,7 +150,8 @@
       "无已知主要过敏原"
     ],
     "disease_suitable_code": 0,
-    "disease_suitable_readable": []
+    "disease_suitable_readable": [],
+    "flavor_tags": ["清淡"]
   },
   {
     "id": "D012",
@@ -165,7 +169,8 @@
       "高血压适宜",
       "痛风适宜",
       "高血脂适宜"
-    ]
+    ],
+    "flavor_tags": ["清淡", "鲜浓"]
   },
   {
     "id": "D013",
@@ -180,7 +185,8 @@
     "disease_suitable_code": 2,
     "disease_suitable_readable": [
       "高血压适宜"
-    ]
+    ],
+    "flavor_tags": ["清淡", "鲜浓"]
   },
   {
     "id": "D014",
@@ -195,7 +201,8 @@
     "population_tags_readable": [
     ],
     "disease_suitable_code": 0,
-    "disease_suitable_readable": []
+    "disease_suitable_readable": [],
+    "flavor_tags": ["清淡", "鲜浓"]
   },
   {
     "id": "D015",
@@ -213,7 +220,8 @@
       "高血压适宜",
       "痛风适宜",
       "高血脂适宜"
-    ]
+    ],
+    "flavor_tags": ["清淡"]
   },
   {
     "id": "D016",
@@ -230,7 +238,8 @@
     "disease_suitable_code": 1,
     "disease_suitable_readable": [
       "糖尿病适宜"
-    ]
+    ],
+    "flavor_tags": ["鲜浓", "辣"]
   },
   {
     "id": "D017",
@@ -245,7 +254,8 @@
     "disease_suitable_code": 1,
     "disease_suitable_readable": [
       "糖尿病适宜"
-    ]
+    ],
+    "flavor_tags": ["清淡", "鲜浓"]
   },
   {
     "id": "D018",
@@ -260,7 +270,8 @@
     "disease_suitable_code": 1,
     "disease_suitable_readable": [
       "糖尿病适宜"
-    ]
+    ],
+    "flavor_tags": ["鲜浓"]
   },
   {
     "id": "D019",
@@ -273,7 +284,8 @@
     "population_tags_readable": [     
     ],
     "disease_suitable_code": 0,
-    "disease_suitable_readable": []
+    "disease_suitable_readable": [],
+    "flavor_tags": ["鲜浓", "清淡"]
   },
   {
     "id": "D020",
@@ -288,7 +300,8 @@
     "disease_suitable_code": 1,
     "disease_suitable_readable": [
       "糖尿病适宜"
-    ]
+    ],
+    "flavor_tags": ["清淡", "鲜浓"]
   },
   {
     "id": "D021",
@@ -304,7 +317,8 @@
     "disease_suitable_readable": [
       "高血压适宜",
       "孕产妇适宜"
-    ]
+    ],
+    "flavor_tags": ["清淡", "鲜浓"]
   },
   {
     "id": "D022",
@@ -319,7 +333,8 @@
     "disease_suitable_code": 2,
     "disease_suitable_readable": [
       "高血压适宜"
-    ]
+    ],
+    "flavor_tags": ["清淡", "鲜浓"]
   },
   {
     "id": "D023",
@@ -334,7 +349,8 @@
     "disease_suitable_code": 2,
     "disease_suitable_readable": [
       "高血压适宜"
-    ]
+    ],
+    "flavor_tags": ["清淡", "鲜浓"]
   },
   {
     "id": "D024",
@@ -351,7 +367,8 @@
       "高血压适宜",
       "高血脂适宜",
       "青少年适宜"
-    ]
+    ],
+    "flavor_tags": ["鲜浓", "清淡"]
   },
   {
     "id": "D025",
@@ -368,7 +385,8 @@
       "高血脂适宜",
       "孕产妇适宜",
       "老年适宜"
-    ]
+    ],
+    "flavor_tags": ["清淡", "鲜浓"]
   },
   {
     "id": "D026",
@@ -383,7 +401,8 @@
     "disease_suitable_code": 8,
     "disease_suitable_readable": [
       "高血脂适宜"
-    ]
+    ],
+    "flavor_tags": ["清淡", "苦"]
   },
   {
     "id": "D028",
@@ -398,7 +417,8 @@
     "disease_suitable_code": 8,
     "disease_suitable_readable": [
       "高血脂适宜"
-    ]
+    ],
+    "flavor_tags": ["清淡", "鲜浓"]
   },
   {
     "id": "D029",
@@ -414,7 +434,8 @@
     "disease_suitable_readable": [
       "高血脂适宜",
       "老年适宜"
-    ]
+    ],
+    "flavor_tags": ["清淡", "鲜浓"]
   },
   {
     "id": "D030",
@@ -427,7 +448,8 @@
     "population_tags_readable": [          
     ],
     "disease_suitable_code": 0,
-    "disease_suitable_readable": []
+    "disease_suitable_readable": [],
+    "flavor_tags": ["清淡"]
   },
   {
     "id": "D031",
@@ -442,7 +464,8 @@
     "disease_suitable_code": 4,
     "disease_suitable_readable": [
       "痛风适宜"
-    ]
+    ],
+    "flavor_tags": ["清淡"]
   },
   {
     "id": "D036",
@@ -455,7 +478,8 @@
     "population_tags_readable": [          
     ],
     "disease_suitable_code": 0,
-    "disease_suitable_readable": []
+    "disease_suitable_readable": [],
+    "flavor_tags": ["清淡"]
   },
   {
     "id": "D037",
@@ -472,7 +496,8 @@
       "痛风适宜",
       "青少年适宜",
       "老年适宜"
-    ]
+    ],
+    "flavor_tags": ["清淡", "鲜浓"]
   },
   {
     "id": "D038",
@@ -485,7 +510,8 @@
     "population_tags_readable": [          
     ],
     "disease_suitable_code": 0,
-    "disease_suitable_readable": []
+    "disease_suitable_readable": [],
+    "flavor_tags": ["清淡"]
   },
   {
     "id": "D039",
@@ -500,7 +526,8 @@
     "disease_suitable_code": 16,
     "disease_suitable_readable": [
       "青少年适宜"
-    ]
+    ],
+    "flavor_tags": ["鲜浓"]
   },
   {
     "id": "D040",
@@ -515,7 +542,8 @@
     "disease_suitable_code": 16,
     "disease_suitable_readable": [
       "青少年适宜"
-    ]
+    ],
+    "flavor_tags": ["清淡", "甜"]
   },
   {
     "id": "D041",
@@ -530,7 +558,8 @@
     "disease_suitable_code": 16,
     "disease_suitable_readable": [
       "青少年适宜"
-    ]
+    ],
+    "flavor_tags": ["鲜浓"]
   },
   {
     "id": "D042",
@@ -545,7 +574,8 @@
     "disease_suitable_code": 16,
     "disease_suitable_readable": [
       "青少年适宜"
-    ]
+    ],
+    "flavor_tags": ["鲜浓"]
   },
   {
     "id": "D043",
@@ -560,7 +590,8 @@
     "disease_suitable_code": 16,
     "disease_suitable_readable": [
       "青少年适宜"
-    ]
+    ],
+    "flavor_tags": ["清淡", "鲜浓"]
   },
   {
     "id": "D044",
@@ -576,7 +607,8 @@
     "disease_suitable_code": 32,
     "disease_suitable_readable": [
       "孕产妇适宜"
-    ]
+    ],
+    "flavor_tags": ["清淡", "鲜浓"]
   },
   {
     "id": "D045",
@@ -592,7 +624,8 @@
     "disease_suitable_code": 32,
     "disease_suitable_readable": [
       "孕产妇适宜"
-    ]
+    ],
+    "flavor_tags": ["清淡", "鲜浓"]
   },
   {
     "id": "D046",
@@ -607,7 +640,8 @@
     "disease_suitable_code": 32,
     "disease_suitable_readable": [
       "孕产妇适宜"
-    ]
+    ],
+    "flavor_tags": ["清淡", "甜"]
   },
   {
     "id": "D047",
@@ -622,7 +656,8 @@
     "disease_suitable_code": 32,
     "disease_suitable_readable": [
       "孕产妇适宜"
-    ]
+    ],
+    "flavor_tags": ["清淡", "鲜浓"]
   },
   {
     "id": "D048",
@@ -638,7 +673,8 @@
     "disease_suitable_code": 32,
     "disease_suitable_readable": [
       "孕产妇适宜"
-    ]
+    ],
+    "flavor_tags": ["清淡", "鲜浓"]
   },
   {
     "id": "D049",
@@ -653,7 +689,8 @@
     "population_tags_readable": [            
     ],
     "disease_suitable_code": 0,
-    "disease_suitable_readable": []
+    "disease_suitable_readable": [],
+    "flavor_tags": ["清淡"]
   },
   {
     "id": "D050",
@@ -667,7 +704,8 @@
     ],
     "population_tags_readable": [],
     "disease_suitable_code": 0,
-    "disease_suitable_readable": []
+    "disease_suitable_readable": [],
+    "flavor_tags": ["清淡", "甜"]
   },
   {
     "id": "D051",
@@ -682,7 +720,8 @@
     "population_tags_readable": [            
     ],
     "disease_suitable_code": 0,
-    "disease_suitable_readable": []
+    "disease_suitable_readable": [],
+    "flavor_tags": ["清淡", "甜"]
   },
   {
     "id": "D052",
@@ -697,7 +736,8 @@
     "population_tags_readable": [ 
     ],
     "disease_suitable_code": 0,
-    "disease_suitable_readable": []
+    "disease_suitable_readable": [],
+    "flavor_tags": ["清淡"]
   },
   {
     "id": "D056",
@@ -712,7 +752,8 @@
     "population_tags_readable": [ 
     ],
     "disease_suitable_code": 0,
-    "disease_suitable_readable": []
+    "disease_suitable_readable": [],
+    "flavor_tags": ["清淡"]
   },
   {
     "id": "D057",
@@ -727,7 +768,8 @@
     "population_tags_readable": [ 
     ],
     "disease_suitable_code": 0,
-    "disease_suitable_readable": []
+    "disease_suitable_readable": [],
+    "flavor_tags": ["清淡"]
   },
   {
     "id": "D058",
@@ -742,6 +784,22 @@
     "population_tags_readable": [ 
     ],
     "disease_suitable_code": 0,
-    "disease_suitable_readable": []
+    "disease_suitable_readable": [],
+    "flavor_tags": ["清淡"]
+  },
+  {
+    "id": "D059",
+    "name": "椒麻羊肉",
+    "category": "荤菜",
+    "description": "椒麻羊肉是一道香辣可口的菜肴，适合喜欢吃辣的人群。羊肉是高蛋白、低脂肪的肉类，含有丰富的维生素B群和铁质。以下是椒麻羊肉的营养标签信息。",
+    "disease_blacklist_code": 0,
+    "allergen_mask_code": 0,
+    "disease_tags_readable": [],
+    "population_tags_readable": [],
+    "disease_suitable_code": 102,
+    "disease_suitable_readable": [
+      "一般人群适宜"
+    ],
+    "flavor_tags": ["椒麻", "辣"]
   }
-]
+] 

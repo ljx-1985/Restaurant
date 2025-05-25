@@ -24,128 +24,109 @@ describe('recommendDishes - Flavor Preference Unit Tests', () => {
 
   const allTestDishes = [dish1_su_qingdan, dish2_hun_la_xian, dish3_tang_tian, dish4_su_no_flavor, dish5_hun_xian, dish6_tang_no_flavor_high_score];
 
-  it('should filter dishes based on single matching flavor preference', () => {
+  it('should give higher scores to dishes matching flavor preferences', () => {
     const userInput = { diseases: 0, allergy_mask: 0, flavor_preferences: ['清淡'] };
     const recommendations = recommendDishes(userInput, allTestDishes);
-    const recommendedIds = recommendations.map(d => d.id);
-    expect(recommendedIds).toContain('D1'); // D1 素菜 清淡
-    expect(recommendedIds).not.toContain('D2'); // D2 荤菜 辣, 鲜浓
-    expect(recommendedIds).not.toContain('D3'); // D3 汤 甜
-    // D4 (素菜, 无标签) 应该在口味偏好过滤阶段被保留 (因为它没有标签，无法判断是否冲突)，最终是否被推荐取决于评分和品类
-    // D5 (荤菜, 鲜浓) 不匹配 "清淡"
-    expect(recommendedIds).not.toContain('D5');
-    // D6 (汤, 无标签) 也应被保留
+    
+    // 所有菜品都应该参与推荐，但匹配口味偏好的菜品应该得分更高
+    expect(recommendations.length).toBeGreaterThan(0);
+    
+    // 找到素菜推荐（应该是D1，因为它匹配"清淡"口味偏好）
+    const vegRecommendation = recommendations.find(d => d.category === '素菜');
+    expect(vegRecommendation).toBeDefined();
+    expect(vegRecommendation.id).toBe('D1'); // D1应该因为匹配口味偏好而得分更高
   });
 
-  it('should filter dishes based on multiple matching flavor preferences (dish must match at least one)', () => {
+  it('should recommend dishes matching multiple flavor preferences', () => {
     const userInput = { diseases: 0, allergy_mask: 0, flavor_preferences: ['辣', '甜'] };
     const recommendations = recommendDishes(userInput, allTestDishes);
-    const recommendedIds = recommendations.map(d => d.id);
     
-    expect(recommendedIds).not.toContain('D1'); // D1 清淡
-    expect(recommendedIds).toContain('D2');   // D2 荤菜 辣, 鲜浓 (匹配 辣)
-    // D3 (汤, 甜) 匹配 "甜", D6 (汤, 无标签, 高分描述) 也通过口味过滤。
-    // D6 得分 (54.45) 高于 D3 (52.9), 所以 D6 应该被推荐为汤。
-    expect(recommendedIds).not.toContain('D3'); 
-    expect(recommendedIds).toContain('D6'); // D6 (汤) 应被推荐
-    expect(recommendedIds).not.toContain('D5'); // D5 鲜浓
+    expect(recommendations.length).toBeGreaterThan(0);
+    
+    // 荤菜推荐应该是D2（匹配"辣"）
+    const meatRecommendation = recommendations.find(d => d.category === '荤菜');
+    expect(meatRecommendation).toBeDefined();
+    expect(meatRecommendation.id).toBe('D2'); // D2匹配"辣"口味偏好
+    
+    // 汤推荐应该是D3（匹配"甜"）
+    const soupRecommendation = recommendations.find(d => d.category === '汤');
+    expect(soupRecommendation).toBeDefined();
+    expect(soupRecommendation.id).toBe('D3'); // D3匹配"甜"口味偏好
   });
 
-  it('should correctly handle dishes with no flavor_tags when user specifies flavor_preferences', () => {
-    const userInput = { diseases: 0, allergy_mask: 0, flavor_preferences: ['不存在的口味'] };
-    // 提供一个有口味标签（会被过滤）和一个没有口味标签（期望保留并被推荐）的素菜
+  it('should give moderate scores to dishes without flavor tags when user has flavor preferences', () => {
+    const userInput = { diseases: 0, allergy_mask: 0, flavor_preferences: ['椒麻'] }; // 不存在的口味
     const testDishes = [dish1_su_qingdan, dish4_su_no_flavor]; 
     const recommendations = recommendDishes(userInput, testDishes);
     
-    const recommendedVegDishes = recommendations.filter(d => d.category === '素菜');
-    
-    // 期望 D1 (有"清淡"标签) 被 "不存在的口味" 过滤掉。
-    // 期望 D4 (无标签) 通过口味过滤，并且因为是素菜品类中唯一的选择，所以被推荐。
-    expect(recommendedVegDishes.length).toBe(1);
-    if (recommendedVegDishes.length === 1) {
-        expect(recommendedVegDishes[0].id).toBe('D4');
-        expect(recommendedVegDishes[0].name).toBe('Dish D4'); // 确认是 D4
-    }
-    // 确保 D1 不在最终推荐中（可以检查整个 recommendations 列表）
-    const recommendedAllIds = recommendations.map(d => d.id);
-    expect(recommendedAllIds).not.toContain('D1');
+    // 应该推荐D4，因为它没有口味标签，获得中等加分（10分）
+    // 而D1有"清淡"标签但不匹配"椒麻"，只获得基础分
+    const vegRecommendation = recommendations.find(d => d.category === '素菜');
+    expect(vegRecommendation).toBeDefined();
+    expect(vegRecommendation.id).toBe('D4'); // D4应该因为中等加分而胜出
   });
 
-  it('should not filter by flavor if flavor_preferences is empty', () => {
+  it('should recommend all categories when no flavor preferences specified', () => {
     const userInput = { diseases: 0, allergy_mask: 0, flavor_preferences: [] };
-    const testDishes = [dish1_su_qingdan, dish2_hun_la_xian];
+    const testDishes = [dish1_su_qingdan, dish2_hun_la_xian, dish3_tang_tian];
     const recommendations = recommendDishes(userInput, testDishes);
+    
+    // 没有口味偏好时，所有菜品都应该参与推荐
+    expect(recommendations.length).toBe(3); // 每个品类一个推荐
     const recommendedIds = recommendations.map(d => d.id);
     expect(recommendedIds).toContain('D1');
     expect(recommendedIds).toContain('D2');
+    expect(recommendedIds).toContain('D3');
   });
 
-  it('should not filter by flavor if flavor_preferences is not provided', () => {
+  it('should recommend all categories when flavor_preferences is not provided', () => {
     const userInput = { diseases: 0, allergy_mask: 0 }; // flavor_preferences 省略
-    const testDishes = [dish1_su_qingdan, dish2_hun_la_xian];
+    const testDishes = [dish1_su_qingdan, dish2_hun_la_xian, dish3_tang_tian];
     const recommendations = recommendDishes(userInput, testDishes);
+    
+    expect(recommendations.length).toBe(3);
     const recommendedIds = recommendations.map(d => d.id);
     expect(recommendedIds).toContain('D1');
     expect(recommendedIds).toContain('D2');
+    expect(recommendedIds).toContain('D3');
   });
   
-  it('should correctly recommend from dishes that passed flavor filter for each category', () => {
+  it('should correctly score and recommend dishes based on flavor matching', () => {
     const userInput = { diseases: 0, allergy_mask: 0, flavor_preferences: ['鲜浓'] };
-    // D1(素,清淡), D2(荤,辣,鲜浓), D3(汤,甜), D4(素,无), D5(荤,鲜浓), D6(汤,无,高分描述)
-    // 口味过滤后应该剩下: D2, D4, D5, D6 (因为D4, D6无标签)
-    // 品类 '素菜': D4 (无标签)
-    // 品类 '荤菜': D2 (辣,鲜浓), D5 (鲜浓) -> 期望D2或D5中评分高的
-    // 品类 '汤': D6 (无标签)
-    const recommendations = recommendDishes(userInput, allTestDishes);
-    const recommendedIds = recommendations.map(d => d.id);
-
-    const recommendedVegDish = recommendations.find(d => d.category === '素菜');
-    const recommendedMeatDish = recommendations.find(d => d.category === '荤菜');
-    const recommendedSoupDish = recommendations.find(d => d.category === '汤');
-
-    expect(recommendedVegDish).toBeDefined();
-    expect(recommendedVegDish.id).toBe('D4'); // D4是唯一通过口味过滤（因无标签）的素菜
-
-    expect(recommendedMeatDish).toBeDefined();
-    // D2(辣,鲜浓) vs D5(鲜浓). 假设D2描述短，D5描述稍长一点，但这里我们用的是固定描述。
-    // 如果评分仅基于基础分和描述，两者可能很接近或相同，取决于具体实现。
-    // 为了测试稳定，我们可以让D5的描述更长，使其评分高于D2
-    const dish5_modified_desc = 'A very long and detailed description for D5 to ensure it scores higher if it matches flavor.';
-    const dish5_modified = createDish('D5', '荤菜', ['鲜浓'], {description: dish5_modified_desc });
-    const dish2_modified_short_desc = 'Short desc.';
-    const dish2_modified = createDish('D2', '荤菜', ['辣', '鲜浓'], {description: dish2_modified_short_desc});
     
-    const testDishesModified = allTestDishes.map(d => {
-        if (d.id === 'D5') return dish5_modified;
-        if (d.id === 'D2') return dish2_modified;
-        return d;
-    });
-
-    const recommendationsWithModifiedDishes = recommendDishes(userInput, testDishesModified);
-    const meatDishFromModifiedDishes = recommendationsWithModifiedDishes.find(d => d.category === '荤菜');
+    // 创建两个荤菜，一个匹配口味偏好，一个不匹配
+    const dish2_matching = createDish('D2', '荤菜', ['辣', '鲜浓'], {description: 'Short description'});
+    const dish5_matching = createDish('D5', '荤菜', ['鲜浓'], {description: 'Very long and detailed description for higher base score'});
     
-    expect(meatDishFromModifiedDishes).toBeDefined();
-    // D2和D5都包含鲜浓。如果D5评分更高，它应该被推荐。
-    expect(['D2', 'D5']).toContain(meatDishFromModifiedDishes.id); // D2或D5其一
-    if (meatDishFromModifiedDishes.id === 'D2') {
-        expect(dish2_modified.flavor_tags).toEqual(expect.arrayContaining(['鲜浓']));
-    } else {
-        expect(dish5_modified.flavor_tags).toEqual(expect.arrayContaining(['鲜浓']));
+    const testDishes = [dish1_su_qingdan, dish2_matching, dish3_tang_tian, dish4_su_no_flavor, dish5_matching, dish6_tang_no_flavor_high_score];
+    const recommendations = recommendDishes(userInput, testDishes);
+    
+    expect(recommendations.length).toBeGreaterThan(0);
+    
+    // 荤菜推荐应该是匹配"鲜浓"的菜品中得分最高的
+    const meatRecommendation = recommendations.find(d => d.category === '荤菜');
+    expect(meatRecommendation).toBeDefined();
+    expect(['D2', 'D5']).toContain(meatRecommendation.id); // 应该是D2或D5中的一个
+    
+    // 验证推荐的菜品确实匹配口味偏好
+    if (meatRecommendation.flavor_tags && meatRecommendation.flavor_tags.length > 0) {
+      expect(meatRecommendation.flavor_tags).toContain('鲜浓');
     }
-    
-    expect(recommendedSoupDish).toBeDefined();
-    expect(recommendedSoupDish.id).toBe('D6'); // D6 (无标签) 是唯一通过口味过滤的汤，且我们给了它高分描述
   });
 
-  it('should return empty array if no dishes match flavor preferences and no dishes without flavor tags exist in a category', () => {
+  it('should still recommend dishes even if no dishes match flavor preferences', () => {
     const userInput = { diseases: 0, allergy_mask: 0, flavor_preferences: ['不存在的口味'] };
-    const testDishesOnlyWithFlavors = [dish1_su_qingdan, dish2_hun_la_xian, dish3_tang_tian]; // 所有菜品都有口味标签
+    const testDishesOnlyWithFlavors = [dish1_su_qingdan, dish2_hun_la_xian, dish3_tang_tian];
     
     const recommendations = recommendDishes(userInput, testDishesOnlyWithFlavors);
     expect(recommendations).toBeInstanceOf(Array);
-    // 因为所有菜品都有口味标签，且都不匹配 "不存在的口味"，所以每个品类都应该没有菜品可选
-    // 因此最终的推荐列表应该是空的
-    expect(recommendations.length).toBe(0); 
+    
+    // 即使没有菜品匹配口味偏好，仍然应该推荐每个品类中得分最高的菜品
+    expect(recommendations.length).toBe(3); // 每个品类一个推荐
+    const recommendedIds = recommendations.map(d => d.id);
+    expect(recommendedIds).toContain('D1');
+    expect(recommendedIds).toContain('D2');
+    expect(recommendedIds).toContain('D3');
   });
 
-}); 
+});

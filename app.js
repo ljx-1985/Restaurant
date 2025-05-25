@@ -176,29 +176,29 @@ app.post('/recommend', (req, res) => {
     }
   }
 
+  // 获取要排除的菜品ID列表
+  const currentExcludeIds = Array.isArray(excludeIds) ? excludeIds : [];
+  
+  let dishesToRecommend = allDishes;
+  if (currentExcludeIds.length > 0) {
+    console.time('recommend_exclude_filter_duration'); // 开始计时排除ID的过滤
+    console.log(`排除 ${currentExcludeIds.length} 个已推荐的菜品ID:`, currentExcludeIds);
+    dishesToRecommend = allDishes.filter(dish => !currentExcludeIds.includes(dish.id));
+    console.log(`过滤后剩余 ${dishesToRecommend.length} 个菜品可用于推荐`);
+    console.timeEnd('recommend_exclude_filter_duration'); // 结束计时排除ID的过滤
+  }
+  
   // 构建传递给核心推荐逻辑的对象
   const completeUserInput = {
     diseases: diseases,
     allergy_mask: allergy_mask === undefined ? 0 : allergy_mask,
-    preferences: preferences || [],
     health_needs_code: health_needs_code,
-    flavor_preferences: flavor_preferences || []
+    flavor_preferences: flavor_preferences || [],
+    excludeIds: currentExcludeIds || []
   };
 
   try {
     console.time('recommend_total_duration'); // 开始计时整个 /recommend 请求处理
-    // 获取要排除的菜品ID列表
-    const currentExcludeIds = Array.isArray(excludeIds) ? excludeIds : [];
-    
-    let dishesToRecommend = allDishes;
-    if (currentExcludeIds.length > 0) {
-      console.time('recommend_exclude_filter_duration'); // 开始计时排除ID的过滤
-      console.log(`排除 ${currentExcludeIds.length} 个已推荐的菜品ID:`, currentExcludeIds);
-      dishesToRecommend = allDishes.filter(dish => !currentExcludeIds.includes(dish.id));
-      console.log(`过滤后剩余 ${dishesToRecommend.length} 个菜品可用于推荐`);
-      console.timeEnd('recommend_exclude_filter_duration'); // 结束计时排除ID的过滤
-    }
-    
     // 使用过滤后的菜品列表进行推荐
     console.time('recommend_recommendDishes_call_duration'); // 开始计时 recommendDishes 函数调用
     const recommendedDishes = recommendDishes(completeUserInput, dishesToRecommend);
@@ -212,10 +212,17 @@ app.post('/recommend', (req, res) => {
   }
 });
 
-const server = app.listen(PORT, () => {
-  console.log(`服务器正在运行在 http://localhost:${PORT}`);
-  console.log(`可以通过 POST 请求 http://localhost:${PORT}/recommend 来测试推荐功能。`);
-  console.log('请求体示例: { "diseases": 1 }');
-});
+// 只在直接运行时启动服务器，而不是在被require时启动
+// 同时检查是否在测试环境中
+let server;
+if (require.main === module && process.env.NODE_ENV !== 'test') {
+  server = app.listen(PORT, () => {
+    console.log(`服务器正在运行在 http://localhost:${PORT}`);
+    console.log(`可以通过 POST 请求 http://localhost:${PORT}/recommend 来测试推荐功能。`);
+    console.log('请求体示例: { "diseases": 1 }');
+  });
+} else {
+  server = null;
+}
 
 module.exports = { app: app, server: server }; 
