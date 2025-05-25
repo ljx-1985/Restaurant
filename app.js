@@ -225,4 +225,4 @@ if (require.main === module && process.env.NODE_ENV !== 'test') {
   server = null;
 }
 
-module.exports = { app: app, server: server }; 
+module.exports = app; // 直接导出 Express app 实例 
